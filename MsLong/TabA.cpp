@@ -33,7 +33,7 @@ void CTabA::GameProcessActionADD(vector<DWORD> &vGamePID)
 		{ 
 			CString strPID = m_a_list.GetItemText(i, 0);
 			DWORD dwPID = _tcstoul(strPID, NULL, 10);
-
+			 
 			vector<DWORD>::iterator result = find(vGamePID.begin(), vGamePID.end(), dwPID);
 			if (result == vGamePID.end()) {//找到了不删 没找到就删除
 				m_a_list.DeleteItem(i);
