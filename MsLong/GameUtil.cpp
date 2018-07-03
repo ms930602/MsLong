@@ -1,11 +1,11 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GameUtil.h"
 #include <TlHelp32.h>
 
 CString tget_curpath(BOOL slash)
 {
 	/************************************************************************
-	»ñÈ¡Â·¾¶
+	è·å–è·¯å¾„
 	************************************************************************/
 	TCHAR lpBuffer[MAX_PATH] = { 0 };
 	if (GetModuleFileName(
@@ -18,13 +18,13 @@ CString tget_curpath(BOOL slash)
 	}
 
 	CString CStrPath(lpBuffer);
-	int npos = CStrPath.ReverseFind(_T('\\'));//ÄæÏò²éÕÒ
+	int npos = CStrPath.ReverseFind(_T('\\'));//é€†å‘æŸ¥æ‰¾
 	if (npos != -1)
 	{
 		if (slash == TRUE)
-			CStrPath = CStrPath.Mid(0, npos + 1);//½ØÈ¡´Ó0¿ªÊ¼µÄ×Ö·û´®±£ÁôĞ±¸Ü
+			CStrPath = CStrPath.Mid(0, npos + 1);//æˆªå–ä»0å¼€å§‹çš„å­—ç¬¦ä¸²ä¿ç•™æ–œæ 
 		else
-			CStrPath = CStrPath.Mid(0, npos);//½ØÈ¡´Ó0¿ªÊ¼µÄ×Ö·û´®²»ÒªĞ±¸Ü
+			CStrPath = CStrPath.Mid(0, npos);//æˆªå–ä»0å¼€å§‹çš„å­—ç¬¦ä¸²ä¸è¦æ–œæ 
 											 //dbgPrint(_T("%s::\t\t %s\n"), CString(__FUNCTION__), CStrPath);
 	}
 
@@ -32,11 +32,14 @@ CString tget_curpath(BOOL slash)
 }
 
 BOOL InJectDll(CString PID, CString DllName) {
+
 	DWORD ProcessId = _tcstoul(PID, NULL, 10);
 	if (ProcessId == -1)
 	{
 		return FALSE;
 	}
+	
+	//EnablePrivilege(TRUE);
 
 	HANDLE hProcess =
 		OpenProcess(
@@ -49,8 +52,7 @@ BOOL InJectDll(CString PID, CString DllName) {
 	{
 		return FALSE;
 	}
-
-	//Ä¿±ê³ÌĞòÖĞÉêÇëÒ»Æ¬ÄÚ´æ
+	//ç›®æ ‡ç¨‹åºä¸­ç”³è¯·ä¸€ç‰‡å†…å­˜
 	LPVOID lpBaseAddress =
 		VirtualAllocEx(
 			hProcess,
@@ -71,13 +73,13 @@ BOOL InJectDll(CString PID, CString DllName) {
 		return FALSE;
 
 	_CStrPath += DllName;
-	//DLLÂ·¾¶Ğ´µ½Ä¿±ê½ø³Ì
+	//DLLè·¯å¾„å†™åˆ°ç›®æ ‡è¿›ç¨‹
 	BOOL bWrite =
 
 		WriteProcessMemory(
 			hProcess,
 			lpBaseAddress,
-			_CStrPath,//DLLÂ·¾¶
+			_CStrPath,//DLLè·¯å¾„
 			MAX_PATH,
 			NULL
 		);
@@ -88,14 +90,14 @@ BOOL InJectDll(CString PID, CString DllName) {
 		return FALSE;
 	}
 
-	//¿ªÆôÔ¶³ÌÏß³ÌÖ´ĞĞ¼ÓÔØDLLµÄº¯Êı
+	//å¼€å¯è¿œç¨‹çº¿ç¨‹æ‰§è¡ŒåŠ è½½DLLçš„å‡½æ•°
 	HANDLE hThread =
 
 		CreateRemoteThread(
 			hProcess,
 			NULL,
 			0,
-			(LPTHREAD_START_ROUTINE)LoadLibraryA,
+			(LPTHREAD_START_ROUTINE)LoadLibrary,
 			lpBaseAddress,
 			0,
 			NULL
@@ -113,7 +115,7 @@ BOOL InJectDll(CString PID, CString DllName) {
 		INFINITE
 	);
 
-	//ÇåÀíÔÚÄ¿±ê³ÌĞòÖĞÉêÇëµÄÄÇÒ»Æ¬ÄÚ´æ
+	//æ¸…ç†åœ¨ç›®æ ‡ç¨‹åºä¸­ç”³è¯·çš„é‚£ä¸€ç‰‡å†…å­˜
 	VirtualFreeEx(
 		hProcess,
 		lpBaseAddress,
@@ -123,9 +125,15 @@ BOOL InJectDll(CString PID, CString DllName) {
 
 	CloseHandle(hProcess);
 
+	TRACE("æ³¨å…¥å®Œæ¯•");
 
-
+	//EnablePrivilege(FALSE);
 	return TRUE;
+}
+
+int EnablePrivilege(bool isStart)
+{
+	return 0;
 }
 
 vector<DWORD> GetGameProcessId(CString ProcessNmae) {

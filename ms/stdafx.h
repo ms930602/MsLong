@@ -35,5 +35,50 @@
 #ifndef _AFX_NO_AFXCMN_SUPPORT
 #include <afxcmn.h>                     // MFC 对 Windows 公共控件的支持
 #endif // _AFX_NO_AFXCMN_SUPPORT
+#include <afxcontrolbars.h>
 
+#include <WinSock.h>  //一定要包含这个，或者winsock2.h
+#include <vector>
+#include <string>
+#include <thread>
+using namespace std;
 
+#pragma comment(lib,"wsock32.lib")
+
+#ifdef _DEBUG
+#pragma comment(lib,"..\\HPSocket\\bin\\HPSocket_UD.lib") 
+#else
+#pragma comment(lib,"..\\HPSocket\\bin\\HPSocket_U.lib") 
+#endif // !_DEBUG
+
+enum ELogin
+{
+	注入模块 = 1,
+	卸载模块 = 2,
+	切换角色 = 3
+};
+
+template <typename TF, typename... TS>
+void DPrint(IN  const TF Format, IN const TS... list)
+{
+	try
+	{
+		//CString Cstr;
+		//Cstr.Format(Format, list...);
+		//Cstr = _T("[WG][dll]") + Cstr;
+		::OutputDebugString(CString(Format));//调试输出到软件
+		//WriteLog(Cstr);//写日志
+}
+	catch (...)
+	{
+		::OutputDebugStringA(__FUNCTION__);
+	}
+}
+
+#define def__debug__dll 1
+#undef  dbgPrint
+#if     def__debug__dll
+#define dbgPrint(_x_,...) DPrint(_x_,__VA_ARGS__)
+#else
+#define dbgPrint( _x_ ,...)
+#endif

@@ -35,12 +35,6 @@
 
 
 
-
-
-
-
-
-
 #ifdef _UNICODE
 #if defined _M_IX86
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -51,6 +45,16 @@
 #endif
 #endif
 
+//#ifdef _DEBUG
+//#pragma comment(lib,"..\\HPSocket\\bin\\HPSocket_UD.lib") 
+//#else
+//#pragma comment(lib,"..\\HPSocket\\bin\\HPSocket_U.lib") 
+//#endif // !_DEBUG
 
 //托盘消息
-#define  WM_USER_NOTIFYICON WM_USER+10
+#define  WM_USER_NOTIFYICON  WM_USER + 111
+#define  WM_USER_人物属性信息  WM_USER + 112 
+#define  WM_USER_状况  WM_USER + 113 
+#define  WM_USER_SOCKET_添加PID  WM_USER + 116 
+#define  WM_USER_按钮状态  WM_USER + 117 
+extern HWND g_MyHwnd;

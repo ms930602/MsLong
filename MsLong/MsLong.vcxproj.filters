@@ -42,6 +42,12 @@
     <ClInclude Include="GameUtil.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HPServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketStruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MsLong.cpp">
@@ -60,6 +66,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GameUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HPServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,6 +6,8 @@
 #include "afxcmn.h"
 #include "TabA.h"
 #include "TabB.h"
+#include "HPServer.h"
+
 
 // CMsLongDlg ¶Ô»°¿ò
 class CMsLongDlg : public CDialogEx
@@ -44,4 +46,6 @@ public:
 	afx_msg void OnTcnSelchangeTabMain(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnClose();
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+private:
+	CHPServer MyServer;
 };

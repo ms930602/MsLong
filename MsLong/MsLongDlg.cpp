@@ -6,11 +6,11 @@
 #include "MsLong.h"
 #include "MsLongDlg.h"
 #include "afxdialogex.h"
+#include "HPServer.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
 
 HWND g_MyHwnd = nullptr;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
@@ -140,6 +140,7 @@ BOOL CMsLongDlg::OnInitDialog()
 	m_notify.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP; //有效标志
 	Shell_NotifyIcon(NIM_ADD, &m_notify);//添加托盘
 	/***** End *****/
+	MyServer.MyStart();
 	g_MyHwnd = m_hWnd;
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }

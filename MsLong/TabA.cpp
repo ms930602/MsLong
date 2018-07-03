@@ -30,7 +30,7 @@ void CTabA::GameProcessActionADD(vector<DWORD> &vGamePID)
 	{
 		INT i = 0;
 		while (i < m_a_list.GetItemCount())
-		{ 
+		{
 			CString strPID = m_a_list.GetItemText(i, 0);
 			DWORD dwPID = _tcstoul(strPID, NULL, 10);
 			 
