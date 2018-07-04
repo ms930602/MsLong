@@ -3,6 +3,8 @@
 #include <vector>
 using namespace std;
 
+unsigned int __stdcall InJect_thread(void *p);
+
 BOOL InJectDll(CString ProcessId, CString DllName);
 
 vector<DWORD> GetGameProcessId(CString ProcessNmae);

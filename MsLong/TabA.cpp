@@ -181,7 +181,9 @@ void CTabA::OnMenuInJect()
 	//得到行号，通过POSITION转化
 	int index = m_a_list.GetNextSelectedItem(pos);
 	CString pID = m_a_list.GetItemText(index, 0);
-	InJectDll(pID, _T("ms.dll"));
+	CString* str = new CString;
+	*str = pID;
+	CloseHandle((HANDLE)_beginthreadex(NULL, 0, &InJect_thread, (PVOID)str, 0, NULL));
 }
 
 void CTabA::OnMenuUnInJect()

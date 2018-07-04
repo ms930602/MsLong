@@ -1,12 +1,22 @@
 #include "stdafx.h"
 #include "HPClient.h"
+#include "self.h"
+#include "MainDlg.h"
+#include "Message.h"
 
 #define DEFAULT_CONTENT	_T("text to be sent")
 #define DEFAULT_ADDRESS	_T("127.0.0.1")
 #define DEFAULT_PORT	_T("9897")
 
+CHPClient* pClient = nullptr;
+extern CSelf* pSelf;
+
+CMainDlg * pMainUI;
+CMessage * pMsg;
+
 void CHPClient::HPInit()
 {
+	TRACE("开始连接服务器！");
 	CString strAddress = DEFAULT_ADDRESS;
 	CString strPort = DEFAULT_PORT;
 	USHORT usPort = (USHORT)_ttoi(strPort);
@@ -143,4 +153,40 @@ UINT CHPClient::SendRoleInfo()
 
 	MySendPackets(SOCKET_USERINFO, sizeof(_SocketGameRoleInfo), (char*)&_SocketGameRoleInfo);
 	return 0;
+}
+
+void Initial()
+{
+	TRACE("初始化对象");
+	pClient = new CHPClient;
+	pClient->HPInit();
+	pMsg = new CMessage;
+	pMainUI = new CMainDlg;
+
+	TRACE("初始化消息函数");
+	pMsg->Init();
+
+	TRACE("1111");
+	pMainUI->DoModal();
+
+	TRACE("发送角色信息");
+	pClient->SendRoleInfo();
+	TRACE("发送完毕");
+}
+
+UINT __stdcall Dll_threadFunc(void* p)//登录线程函数
+{
+	int nType = (int)p;
+
+	if (nType == 注入模块)
+	{
+		Initial();
+		TRACE("注入模块");
+		return 0;
+	}
+
+	dbgPrint("卸载模块");
+	return 0;
+
+	return 1;
 }

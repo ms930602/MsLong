@@ -31,6 +31,19 @@ CString tget_curpath(BOOL slash)
 	return CStrPath;
 }
 
+unsigned int __stdcall InJect_thread(void * p)
+{
+	CString* pCStrPath = (CString*)p;
+	CString CStrPath = *pCStrPath;
+	delete pCStrPath;
+	if (!CStrPath.IsEmpty())
+	{
+		//注入游戏
+		InJectDll(CStrPath, _T("ms.dll"));
+	}
+	return 0;
+}
+
 BOOL InJectDll(CString PID, CString DllName) {
 
 	DWORD ProcessId = _tcstoul(PID, NULL, 10);

@@ -233,6 +233,7 @@
     <ClInclude Include="..\HPSocket\Src\SocketInterface.h" />
     <ClInclude Include="..\HPSocket\Src\TcpClient.h" />
     <ClInclude Include="..\HPSocket\Src\TcpPullClient.h" />
+    <ClInclude Include="ClientFunction.h" />
     <ClInclude Include="HPClient.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="Message.h" />

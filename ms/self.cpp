@@ -1,25 +1,10 @@
 #include "stdafx.h"
 #include "self.h"
-#include "MainDlg.h"
-#include "Message.h"
-
-CMainDlg * pMainUI;
-CMessage * pMsg;
-
-void Initial()
-{
-	pMainUI = new CMainDlg;
-	pMsg = new CMessage;
 
 
-	TRACE("创建UI");
-	pMainUI->DoModal();
-
-	TRACE("初始化消息函数");
-	pMsg->Init();
-
-
-}
+extern CMainDlg* pMainUI;
+extern CSelf* pSelf;
+extern CMessage* pMsg;
 
 CSelf::CSelf()
 {
@@ -29,22 +14,10 @@ CSelf::CSelf()
 
 CSelf::~CSelf()
 {
-	delete pMainUI;
-	delete pMsg;
 }
 
-UINT CSelf::InitLoadDLL(void* p)
+void CSelf::InitLoadDLL(void* p)
 {
-	int nType = (int)p;
-
-	if (nType == 注入模块)
-	{
-		m_HPClient.HPInit();
-		Initial();
-		dbgPrint("注入模块");
-		return 0;
-	}
-
-	dbgPrint("卸载模块");
-	return 0;
+	HANDLE	hlg = (HANDLE)_beginthreadex(NULL, 0, &Dll_threadFunc, (void*)p, 0, NULL);
+	::CloseHandle(hlg);
 }

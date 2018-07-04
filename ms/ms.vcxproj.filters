@@ -146,6 +146,9 @@
     <ClInclude Include="..\HPSocket\Src\TcpPullClient.h">
       <Filter>HPSocket</Filter>
     </ClInclude>
+    <ClInclude Include="ClientFunction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ms.def">

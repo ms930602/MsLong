@@ -33,15 +33,15 @@ BOOL CmsApp::InitInstance()
 {
 	CWinApp::InitInstance();
 	TRACE("³õÊ¼»¯DLL");
-	//self = new CSelf;
-	//self->hDll = theApp.m_hInstance;
-	//self->InitLoadDLL((void*)1);
+	self = new CSelf;
+	self->hDll = theApp.m_hInstance;
+	self->InitLoadDLL((void*)1);
 	return TRUE;
 }
 
 int CmsApp::ExitInstance()
 {
-	//delete self;
+	delete self;
 
 	return CWinApp::ExitInstance();
 }

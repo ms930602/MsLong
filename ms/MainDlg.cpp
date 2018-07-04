@@ -6,7 +6,6 @@
 #include "MainDlg.h"
 #include "afxdialogex.h"
 
-
 // CMainDlg 对话框
 
 IMPLEMENT_DYNAMIC(CMainDlg, CDialogEx)
@@ -38,7 +37,6 @@ END_MESSAGE_MAP()
 
 void CMainDlg::OnBnClickedBtn1()
 {
-	// TODO: 在此添加控件通知处理程序代码
 }
 
 LRESULT CMainDlg::OnMyStyleMessage(WPARAM wParam, LPARAM lParam)
