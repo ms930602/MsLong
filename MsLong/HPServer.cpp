@@ -21,7 +21,7 @@ void CHPServer::MyStart()
 {
 	m_strAddress = ADDRESS;
 	m_strAddress.Trim();
-	if (m_Server->Start(ADDRESS, PORT))
+	if (m_Server.Start(ADDRESS, PORT))
 	{
 		TRACE("启动服务器");
 	}
@@ -33,7 +33,7 @@ void CHPServer::MyStart()
 
 void CHPServer::MyStop()
 {
-	if (m_Server->Stop())
+	if (m_Server.Stop())
 	{
 		TRACE("停止服务器");
 	}
@@ -47,7 +47,7 @@ void CHPServer::MyDisconnect()
 {
 	CString strConnID;
 	CONNID dwConnID = (CONNID)_ttoi(strConnID);
-	m_Server->Disconnect(dwConnID);
+	m_Server.Disconnect(dwConnID);
 }
 
 EnHandleResult CHPServer::OnPrepareListen(ITcpServer * pSender, SOCKET soListen)
@@ -121,8 +121,6 @@ EnHandleResult CHPServer::OnReceive(ITcpServer * pSender, CONNID dwConnID, int i
 				pInfo->is_header = !pInfo->is_header;
 				pInfo->length = required;
 
-				//::PostOnReceive(dwConnID, buffer, (int)buffer.Size());
-
 				if (!pSender->Send(dwConnID, buffer, (int)buffer.Size()))
 					return HR_ERROR;
 			}
@@ -134,8 +132,6 @@ EnHandleResult CHPServer::OnReceive(ITcpServer * pSender, CONNID dwConnID, int i
 
 EnHandleResult CHPServer::OnClose(ITcpServer * pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)
 {
-	RemovePkgInfo(pSender, dwConnID);
-
 	return HR_OK;
 }
 

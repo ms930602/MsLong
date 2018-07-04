@@ -33,7 +33,8 @@
 
 #include <afxcontrolbars.h>     // 功能区和控件条的 MFC 支持
 
-
+#pragma comment(lib,"libssl.lib")
+#pragma comment(lib,"libcrypto.lib")
 
 #ifdef _UNICODE
 #if defined _M_IX86
@@ -44,6 +45,13 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 #endif
+
+#define _USE_MFC
+#define _DETECT_MEMORY_LEAK
+
+#define _ZLIB_DISABLED
+
+#include "../HPSocket/Common/Src/GeneralHelper.h"
 
 //#ifdef _DEBUG
 //#pragma comment(lib,"..\\HPSocket\\bin\\HPSocket_UD.lib") 

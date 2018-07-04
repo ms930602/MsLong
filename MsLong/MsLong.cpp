@@ -6,11 +6,6 @@
 #include "MsLong.h"
 #include "MsLongDlg.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-
 // CMsLongApp
 
 BEGIN_MESSAGE_MAP(CMsLongApp, CWinApp)

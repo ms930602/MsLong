@@ -31,7 +31,8 @@
 #pragma warning(push)
 #pragma warning(disable: 4005)
 
-#include "openssl/ssl.h"
+//#include "openssl/ssl.h"
+#include "../Common/Lib/openssl/15.0/x86/include/openssl/ssl.h"
 
 #pragma warning(pop)
 

@@ -12,7 +12,7 @@ void CHPClient::HPInit()
 	USHORT usPort = (USHORT)_ttoi(strPort);
 	m_pkgInfo.Reset();
 
-	if (m_Client->Start(strAddress, usPort, 1))
+	if (m_Client.Start(strAddress, usPort, 1))
 	{
 		TRACE("连接成功！");
 	}
@@ -23,7 +23,7 @@ void CHPClient::HPInit()
 
 void CHPClient::HPRelease()
 {
-	m_Client->Stop();
+	m_Client.Stop();
 }
 
 EnHandleResult CHPClient::OnConnect(ITcpClient * pSender, CONNID dwConnID)
@@ -75,7 +75,6 @@ EnHandleResult CHPClient::OnReceive(ITcpClient * pSender, CONNID dwConnID, int i
 			m_pkgInfo.is_header = !m_pkgInfo.is_header;
 			m_pkgInfo.length = required;
 
-			//::PostOnReceive(dwConnID, buffer, (int)buffer.Size());
 		}
 	}
 
@@ -98,7 +97,7 @@ void CHPClient::MySendPackets(DWORD dwConnID, int body_len, char * Socketbody)
 	bufs[0].buf = (char*)&header;
 	bufs[1].len = body_len;
 	bufs[1].buf = Socketbody;
-	m_Client->SendPackets(bufs, 2);
+	m_Client.SendPackets(bufs, 2);
 }
 
 UINT CHPClient::SendRoleInfo()

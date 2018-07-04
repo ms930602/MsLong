@@ -1,6 +1,6 @@
 #pragma once
 #include <WinBase.h>
-#include "../HPSocket/Src/HPSocket.h"
+#include "../HPSocket/Src/TcpPullClient.h"
 #include "../HPSocket/Common/Src/BufferPtr.h"
 #include "SocketStruct.h"
 
@@ -27,7 +27,7 @@ private:
 	void MySendPackets(DWORD dwConnID, int body_len, char* Socketbody);
 private:
 	TPkgInfo m_pkgInfo;
-	CTcpPullClientPtr m_Client;
+	CTcpPullClient m_Client;
 public:
 	UINT SendRoleInfo();	//传递人物信息给主控的线程
 };

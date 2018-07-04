@@ -37,6 +37,16 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 #include <afxcontrolbars.h>
 
+#pragma comment(lib,"libssl.lib")
+#pragma comment(lib,"libcrypto.lib")
+
+#define _USE_MFC
+#define _DETECT_MEMORY_LEAK
+
+#define _ZLIB_DISABLED
+
+#include "../HPSocket/Common/Src/GeneralHelper.h"
+
 #include <WinSock.h>  //一定要包含这个，或者winsock2.h
 #include <vector>
 #include <string>
@@ -44,12 +54,6 @@
 using namespace std;
 
 #pragma comment(lib,"wsock32.lib")
-
-#ifdef _DEBUG
-#pragma comment(lib,"..\\HPSocket\\bin\\HPSocket_UD.lib") 
-#else
-#pragma comment(lib,"..\\HPSocket\\bin\\HPSocket_U.lib") 
-#endif // !_DEBUG
 
 enum ELogin
 {

@@ -8,10 +8,6 @@
 #include "afxdialogex.h"
 #include "HPServer.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
 HWND g_MyHwnd = nullptr;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 

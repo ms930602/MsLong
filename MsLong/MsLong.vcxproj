@@ -75,12 +75,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>F:\VSWork\MsLong\HPSocket\Common\Lib\openssl\15.0\x86\include;$(IncludePath)</IncludePath>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
+    <LibraryPath>F:\VSWork\MsLong\HPSocket\Common\Lib\openssl\15.0\x86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>F:\VSWork\MsLong\HPSocket\Common\Lib\openssl\15.0\x86\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\VSWork\MsLong\HPSocket\Common\Lib\openssl\15.0\x86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -98,8 +103,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -150,6 +154,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -193,6 +198,24 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\HPSocket\Common\Src\BufferPool.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\BufferPtr.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\CriticalSection.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\Event.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\GeneralHelper.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\PrivateHeap.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\RWLock.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\Semaphore.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\Singleton.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\STLHelper.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\SysHelper.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\WaitFor.h" />
+    <ClInclude Include="..\HPSocket\Common\Src\Win32Helper.h" />
+    <ClInclude Include="..\HPSocket\Src\HPTypeDef.h" />
+    <ClInclude Include="..\HPSocket\Src\SocketHelper.h" />
+    <ClInclude Include="..\HPSocket\Src\SocketInterface.h" />
+    <ClInclude Include="..\HPSocket\Src\TcpPullServer.h" />
+    <ClInclude Include="..\HPSocket\Src\TcpServer.h" />
     <ClInclude Include="GameUtil.h" />
     <ClInclude Include="HPServer.h" />
     <ClInclude Include="MsLong.h" />
@@ -205,6 +228,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\HPSocket\Common\Src\BufferPool.cpp" />
+    <ClCompile Include="..\HPSocket\Common\Src\RWLock.cpp" />
+    <ClCompile Include="..\HPSocket\Common\Src\SysHelper.cpp" />
+    <ClCompile Include="..\HPSocket\Common\Src\WaitFor.cpp" />
+    <ClCompile Include="..\HPSocket\Src\SocketHelper.cpp" />
+    <ClCompile Include="..\HPSocket\Src\TcpPullServer.cpp" />
+    <ClCompile Include="..\HPSocket\Src\TcpServer.cpp" />
     <ClCompile Include="GameUtil.cpp" />
     <ClCompile Include="HPServer.cpp" />
     <ClCompile Include="MsLong.cpp" />

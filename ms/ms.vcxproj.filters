@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{624b552f-99d1-4248-b42a-9620ae13f2c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HPSocket">
+      <UniqueIdentifier>{b4f385c8-d9b1-4b3c-a879-fab18af45c99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -35,6 +41,27 @@
     </ClCompile>
     <ClCompile Include="Message.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HPSocket\Common\Src\BufferPool.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HPSocket\Common\Src\RWLock.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HPSocket\Common\Src\SysHelper.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HPSocket\Common\Src\WaitFor.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HPSocket\Src\SocketHelper.cpp">
+      <Filter>HPSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HPSocket\Src\TcpClient.cpp">
+      <Filter>HPSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HPSocket\Src\TcpPullClient.cpp">
+      <Filter>HPSocket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +91,60 @@
     </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\BufferPool.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\BufferPtr.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\CriticalSection.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\Event.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\GeneralHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\PrivateHeap.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\RWLock.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\Semaphore.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\Singleton.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\STLHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\SysHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\WaitFor.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Common\Src\Win32Helper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Src\HPTypeDef.h">
+      <Filter>HPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Src\SocketHelper.h">
+      <Filter>HPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Src\SocketInterface.h">
+      <Filter>HPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Src\TcpClient.h">
+      <Filter>HPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HPSocket\Src\TcpPullClient.h">
+      <Filter>HPSocket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

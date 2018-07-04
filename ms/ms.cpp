@@ -4,9 +4,6 @@
 #include "stdafx.h"
 #include "ms.h"
 #include "self.h"
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
 
 CSelf* self = nullptr;
 

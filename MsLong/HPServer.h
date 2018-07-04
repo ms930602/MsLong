@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../HPSocket/Src/HPSocket.h"
+#include "../HPSocket/Src/TcpPullServer.h"
 #include "../HPSocket/Common/Src/BufferPtr.h"
 #include "SocketStruct.h"
 #include <vector>
@@ -26,14 +26,14 @@ private:
 	virtual EnHandleResult OnClose(ITcpServer* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode);
 	virtual EnHandleResult OnShutdown(ITcpServer* pSender);
 private:
-	TPkgInfo* FindPkgInfo(ITcpServer* pSender, CONNID dwConnID);
-	void RemovePkgInfo(ITcpServer* pSender, CONNID dwConnID);
+	static TPkgInfo* FindPkgInfo(ITcpServer* pSender, CONNID dwConnID);
+	static void RemovePkgInfo(ITcpServer* pSender, CONNID dwConnID);
 	//HpSocket »Øµ÷
 	void HandlePacket(CONNID dwConnID, DWORD dwPacketID, CBufferPtr pbuffer);
 private:
 	static const USHORT PORT;
 	static const LPCTSTR ADDRESS;
-	CTcpPullServerPtr m_Server;
+	CTcpPullServer m_Server;
 	CString m_strAddress;
 };
 
