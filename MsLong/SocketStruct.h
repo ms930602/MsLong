@@ -4,6 +4,7 @@
 #define SOCKET_GAME_启动游戏 1
 #define SOCKET_GAME_单独登录 2
 #define SOCKET_GAME_批量登陆 3
+#define SOCKET_GAME_UNINSTALL 4
 
 #define SOCKET_LINK 10 //连接服务端消息
 #define SOCKET_USERINFO 11 //客户端->服务端 发送角色信息
@@ -49,23 +50,77 @@ struct TPkgHeader
 	int body_len;
 };
 
-struct TPkgBody
-{
-	char name[30];
-	short age;
-	char desc[1];
-};
-
 struct TPkgInfo
 {
 	bool is_header;
 	int length;
+	DWORD  seq;				//数据ID
 
-	TPkgInfo(bool header = true, int len = sizeof(TPkgHeader)) : is_header(header), length(len) {}
-	void Reset() { is_header = true, length = sizeof(TPkgHeader); }
+	TPkgInfo(bool header = true, int nID = 0, int len = sizeof(TPkgHeader)) : is_header(header), seq(nID), length(len) {}
+	void Reset() { is_header = true, seq = 0, length = sizeof(TPkgHeader); }
 	~TPkgInfo() {}
 };
 
+struct SocketBind
+{
+	CONNID dwConnID;//链接ID
+	DWORD dwGameID;
+	char Account[50];//游戏帐号
+};
+
+/*
+*连接成功后，发送来的用户名和密码
+*/
+struct SocketLoginInfo
+{
+	char GameName[30];//账号
+	char GameNameHouZhui[20];//账号后缀
+	char GamePWD[50];//密码
+	char GameServerName[15];//小区(服务器)名字
+	char RoleName[20];//角色名
+	char MiBao[98];//角色名
+	int IsLoginIndex;//登录索引
+	int isCreateRole;//无角色时是否创建
+	int IsErJiMiBao;//是否有二级密保
+	char _GameScript[100];//默认脚本名
+};
+
+/*
+*游戏角色信息,(进入游戏成功后发送)
+*/
+struct SocketGameRoleInfo
+{
+	char RoleName[30];//角色名
+	unsigned int RoleLevel;//角色等级
+	unsigned int RoleMenPai;//角色门派
+	unsigned int RoleTi;//体
+	unsigned int RoleFa;//法
+	char GameMap[20];//所在地图
+	int PointX;//X坐标
+	int PointY;//Y坐标
+	unsigned int NoBindGold;//金钱
+	unsigned int BindGold;//交子
+	unsigned int YuanBap;//元宝
+	unsigned int RoleStatus;//角色状态
+};
+
+/*
+*验证结果
+*/
+struct SocketValidateResult
+{
+	CONNID dwDllConnID;
+	unsigned int _ValidateType;//验证类型(0,数字 1，选择)
+	char _Result[20];//验证结果
+};
+
+/*
+*游戏日志信息
+*/
+struct SocketGameInfo
+{
+	char _Message[150];//信息
+};
 
 #pragma pack(pop)
 

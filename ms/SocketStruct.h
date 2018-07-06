@@ -6,6 +6,7 @@
 #define SOCKET_GAME_启动游戏 1
 #define SOCKET_GAME_单独登录 2
 #define SOCKET_GAME_批量登陆 3
+#define SOCKET_GAME_UNINSTALL 4
 
 #define SOCKET_LINK 10 //连接服务端消息
 #define SOCKET_USERINFO 11 //客户端->服务端 发送角色信息
@@ -48,9 +49,10 @@ struct TPkgInfo
 {
 	bool is_header;
 	int length;
+	DWORD  seq;				//数据ID
 
-	TPkgInfo(bool header = true, int len = sizeof(TPkgHeader)) : is_header(header), length(len) {}
-	void Reset() { is_header = true, length = sizeof(TPkgHeader); }
+	TPkgInfo(bool header = true, int nID = 0, int len = sizeof(TPkgHeader)) : is_header(header), seq(nID), length(len) {}
+	void Reset() { is_header = true, seq = 0, length = sizeof(TPkgHeader); }
 	~TPkgInfo() {}
 };
 

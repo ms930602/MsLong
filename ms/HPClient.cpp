@@ -3,6 +3,7 @@
 #include "self.h"
 #include "MainDlg.h"
 #include "Message.h"
+#include "ms.h"
 
 #define DEFAULT_CONTENT	_T("text to be sent")
 #define DEFAULT_ADDRESS	_T("127.0.0.1")
@@ -16,15 +17,15 @@ CMessage * pMsg;
 
 void CHPClient::HPInit()
 {
-	TRACE("开始连接服务器！");
 	CString strAddress = DEFAULT_ADDRESS;
 	CString strPort = DEFAULT_PORT;
 	USHORT usPort = (USHORT)_ttoi(strPort);
 	m_pkgInfo.Reset();
 
-	if (m_Client.Start(strAddress, usPort, 1))
+	if (m_Client.Start(strAddress, usPort, 0))
 	{
-		TRACE("连接成功！");
+		TRACE("连接成功！IP:%s 端口:%d -->发送连接ID", strAddress, usPort);
+		MySendPID();
 	}
 	else {
 		TRACE("连接失败!");
@@ -34,6 +35,12 @@ void CHPClient::HPInit()
 void CHPClient::HPRelease()
 {
 	m_Client.Stop();
+}
+
+void CHPClient::MySendPID()
+{
+	DWORD dwGameID = GetCurrentProcessId();
+	MySendPackets(SOCKET_LINK, sizeof(dwGameID), (char*)&dwGameID);
 }
 
 EnHandleResult CHPClient::OnConnect(ITcpClient * pSender, CONNID dwConnID)
@@ -55,7 +62,6 @@ EnHandleResult CHPClient::OnSend(ITcpClient * pSender, CONNID dwConnID, const BY
 EnHandleResult CHPClient::OnReceive(ITcpClient * pSender, CONNID dwConnID, int iLength)
 {
 	ITcpPullClient* pClient = ITcpPullClient::FromS(pSender);
-
 	int required = m_pkgInfo.length;
 	int remain = iLength;
 
@@ -84,7 +90,6 @@ EnHandleResult CHPClient::OnReceive(ITcpClient * pSender, CONNID dwConnID, int i
 
 			m_pkgInfo.is_header = !m_pkgInfo.is_header;
 			m_pkgInfo.length = required;
-
 		}
 	}
 
@@ -107,7 +112,44 @@ void CHPClient::MySendPackets(DWORD dwConnID, int body_len, char * Socketbody)
 	bufs[0].buf = (char*)&header;
 	bufs[1].len = body_len;
 	bufs[1].buf = Socketbody;
-	m_Client.SendPackets(bufs, 2);
+	if (!m_Client.SendPackets(bufs, 2))
+	{
+		TRACE("发送失败");
+	}
+}
+
+void CHPClient::HandlePacket(DWORD dwPacketID, CBufferPtr & buffer)
+{
+	switch (dwPacketID)
+	{
+	case SOCEKT_LOGIN_INFO://登录信息
+	{
+		TRACE("----client--------->登录信息");
+	}
+	break;
+	case SOCKET_GAME_SCRIPT_INFO://执行脚本
+	{
+		TRACE("-----client-------->执行脚本");
+	}
+	break;
+	case SOCKET_GAME_STOP_SCRIPT://停止脚本
+	{	
+		TRACE("-----client-------->停止脚本");
+	}
+	break;
+	case SOCKET_客户端接受主控_答题结果://收到答题结果
+	{
+		TRACE("-----client-------->收到答题结果");
+	}
+	break;
+	case SOCKET_GAME_UNINSTALL://卸载DLL
+	{
+		TRACE("------client------->卸载游戏");
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 UINT CHPClient::SendRoleInfo()
@@ -157,21 +199,14 @@ UINT CHPClient::SendRoleInfo()
 
 void Initial()
 {
-	TRACE("初始化对象");
-	pClient = new CHPClient;
+	pClient = new CHPClient();
 	pClient->HPInit();
-	pMsg = new CMessage;
-	pMainUI = new CMainDlg;
+	//pMsg = new CMessage();
 
-	TRACE("初始化消息函数");
-	pMsg->Init();
+	//pMsg->Init();
+	//pSelf->CreatUI();
 
-	TRACE("1111");
-	pMainUI->DoModal();
-
-	TRACE("发送角色信息");
 	pClient->SendRoleInfo();
-	TRACE("发送完毕");
 }
 
 UINT __stdcall Dll_threadFunc(void* p)//登录线程函数
@@ -181,7 +216,7 @@ UINT __stdcall Dll_threadFunc(void* p)//登录线程函数
 	if (nType == 注入模块)
 	{
 		Initial();
-		TRACE("注入模块");
+		TRACE("注入完成");
 		return 0;
 	}
 

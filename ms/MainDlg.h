@@ -22,6 +22,8 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	// 生成的消息映射函数
+	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedBtn1();
 	afx_msg LRESULT OnMyStyleMessage(WPARAM wParam, LPARAM lParam);
 };

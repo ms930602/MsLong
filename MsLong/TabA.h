@@ -32,4 +32,7 @@ public:
 	afx_msg void OnBnClickedBtnA1();
 	afx_msg void OnMenuInJect();
 	afx_msg void OnMenuUnInJect();
+	afx_msg LRESULT OnSocketMsg_ActionInfo(WPARAM wparam, LPARAM lparam);//状况信息
+	afx_msg LRESULT OnSocketMsg_RoleInfo(WPARAM wparam, LPARAM lparam);//人物信息更新
+	
 };

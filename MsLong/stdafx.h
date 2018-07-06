@@ -4,7 +4,7 @@
 // 特定于项目的包含文件
 
 #pragma once
-
+#define _CRT_SECURE_NO_WARNINGS
 #ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN            // 从 Windows 头中排除极少使用的资料
 #endif
@@ -66,3 +66,23 @@
 #define  WM_USER_SOCKET_添加PID  WM_USER + 116 
 #define  WM_USER_按钮状态  WM_USER + 117 
 extern HWND g_MyHwnd;
+extern HWND g_TabAHwnd;
+
+class CriticalSectionLock
+{
+	/************************************************************************/
+	/*临界区线程同步类                                                */
+	/************************************************************************/
+public:
+	CriticalSectionLock(CCriticalSection* cs)
+	{
+		cs->Lock();//进入临界区
+		m_cs = cs;
+	}
+	~CriticalSectionLock()
+	{
+		m_cs->Unlock();//交出临界区
+	}
+private:
+	CCriticalSection* m_cs;
+};

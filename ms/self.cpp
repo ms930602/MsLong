@@ -21,3 +21,17 @@ void CSelf::InitLoadDLL(void* p)
 	HANDLE	hlg = (HANDLE)_beginthreadex(NULL, 0, &Dll_threadFunc, (void*)p, 0, NULL);
 	::CloseHandle(hlg);
 }
+
+UINT __stdcall UI_ThreadFunc(LPVOID p)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	pMainUI = new CMainDlg();
+	pMainUI->DoModal();
+	return 0;
+}
+
+void CSelf::CreatUI()//创建UI线程
+{
+	bUiThread = true;
+	hUIThread = (HANDLE)_beginthreadex(NULL, 0, &UI_ThreadFunc, this, 0, NULL);
+}

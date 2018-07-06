@@ -7,9 +7,12 @@
 #include "afxdialogex.h"
 #include <vector>
 #include "GameUtil.h"
+#include "HPServer.h"
 
 using namespace std;
 
+CString title = _T("Channel_18农残.exe");//Channel_18农残.exe
+HWND g_TabAHwnd = nullptr;
 // CTabA 对话框
 
 IMPLEMENT_DYNAMIC(CTabA, CDialogEx)
@@ -17,7 +20,7 @@ IMPLEMENT_DYNAMIC(CTabA, CDialogEx)
 CTabA::CTabA(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_DIALOG1, pParent)
 {
-
+	
 }
 
 CTabA::~CTabA()
@@ -86,8 +89,8 @@ BOOL CTabA::OnInitDialog()
 	m_a_list.InsertColumn(11, _T("交子"), NULL, 60, -1);
 	m_a_list.InsertColumn(12, _T("金钱"), NULL, 60, -1);
 	m_a_list.InsertColumn(13, _T("元宝"), NULL, 60, -1);
-
-	vector<DWORD> vGamePID = GetGameProcessId(_T("Channel_18农残.exe"));
+	CString title_ = title;
+	vector<DWORD> vGamePID = GetGameProcessId(title_);
 	CString strPID;
 	for (auto id : vGamePID)
 	{
@@ -95,6 +98,7 @@ BOOL CTabA::OnInitDialog()
 		m_a_list.InsertItem(0, strPID);
 	}
 
+	g_TabAHwnd = m_hWnd;
 	::SetTimer(m_hWnd, 1, 5000, NULL);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
@@ -105,6 +109,8 @@ BEGIN_MESSAGE_MAP(CTabA, CDialogEx)
 	ON_NOTIFY(NM_RCLICK, IDC_LIST_A, &CTabA::OnNMRClickListA)
 	ON_WM_PAINT()
 	ON_WM_TIMER()
+	ON_MESSAGE(WM_USER_状况, &CTabA::OnSocketMsg_ActionInfo)
+	ON_MESSAGE(WM_USER_人物属性信息, &CTabA::OnSocketMsg_RoleInfo)
 	ON_BN_CLICKED(IDC_BTN_A_1, &CTabA::OnBnClickedBtnA1)
 	ON_COMMAND(ID_32772, &CTabA::OnMenuInJect)
 	ON_COMMAND(ID_32774, &CTabA::OnMenuUnInJect)
@@ -146,7 +152,8 @@ void CTabA::OnTimer(UINT_PTR nIDEvent)
 	switch (nIDEvent)
 	{
 	case 1: {
-		vector<DWORD> vGamePID = GetGameProcessId(_T("Channel_18农残.exe"));
+		CString title_ = title;
+		vector<DWORD> vGamePID = GetGameProcessId(title_);
 
 		GameProcessActionDELETE(vGamePID);
 		GameProcessActionADD(vGamePID);
@@ -188,4 +195,90 @@ void CTabA::OnMenuInJect()
 
 void CTabA::OnMenuUnInJect()
 {
+}
+
+LRESULT CTabA::OnSocketMsg_ActionInfo(WPARAM wparam, LPARAM lparam)
+{
+	SocketGameInfo* _Info = (SocketGameInfo*)lparam;
+	SocketBind* pBind = (SocketBind*)wparam;
+
+	if (pBind->dwGameID > 0)//进程ID查找
+	{
+		CString strPID;
+		strPID.Format(_T("%d"), pBind->dwGameID);
+		LVFINDINFO info;
+		info.flags = LVFI_PARTIAL | LVFI_STRING;
+		info.psz = strPID;//字符串名
+		int  nIndex = m_a_list.FindItem(&info);//查找指定项
+		if (nIndex == -1)
+		{
+			m_a_list.InsertItem(0, strPID);
+		}
+		INT nCount = m_a_list.GetItemCount();//帐号总数
+		for (INT i = 0; i < nCount; i++)
+		{
+			CString strItemText = m_a_list.GetItemText(i, 0);//帐
+			if (strItemText == strPID)
+			{
+				m_a_list.SetItemText(i, 2, CString(_Info->_Message));//名称
+				break;
+			}
+		}
+	}
+
+	delete pBind;
+	delete _Info;
+	return 0;
+}
+
+LRESULT CTabA::OnSocketMsg_RoleInfo(WPARAM wparam, LPARAM lparam)
+{
+	SocketGameRoleInfo* _socketgameInfo = (SocketGameRoleInfo*)lparam;
+	SocketBind* pBind = (SocketBind*)wparam;
+	if (pBind->dwGameID > 0)//进程ID查找
+	{
+		CString strPID;
+		strPID.Format(_T("%d"), pBind->dwGameID);
+		LVFINDINFO info;
+		info.flags = LVFI_PARTIAL | LVFI_STRING;
+		info.psz = strPID;//字符串名
+		int  nIndex = m_a_list.FindItem(&info);//查找指定项
+		if (nIndex == -1)
+		{
+			m_a_list.InsertItem(0, strPID);
+		}
+
+		INT nCount = m_a_list.GetItemCount();//帐号总数
+		CString temp;
+		for (INT i = 0; i < nCount; i++)
+		{
+			CString strItemText = m_a_list.GetItemText(i, 0);//ID
+			if (strItemText == strPID)
+			{
+				m_a_list.SetItemText(i, 4, CString(_socketgameInfo->RoleName));//名称
+				m_a_list.SetItemText(i, 5, GetRoleMenPai(_socketgameInfo->RoleMenPai));//门派
+
+				temp.Format(_T("%d"), _socketgameInfo->RoleLevel);
+				m_a_list.SetItemText(i, 6, temp);//等
+																				  //m_List2.SetItemText(i, 7, CString(_socketgameInfo->RoleName));//宠
+				m_a_list.SetItemText(i, 8, CString(_socketgameInfo->GameMap));//地图
+				temp.Format(_T("%d , %d"), _socketgameInfo->PointX, _socketgameInfo->PointY);
+				m_a_list.SetItemText(i, 9,  temp);//坐标	
+				m_a_list.SetItemText(i, 10, GetRoleState(_socketgameInfo->RoleStatus));//状态
+				
+				temp.Format(_T("%d"), _socketgameInfo->BindGold);
+				m_a_list.SetItemText(i, 11, temp);//交子
+				temp.Format(_T("%d"), _socketgameInfo->NoBindGold);
+				m_a_list.SetItemText(i, 12, temp);//金钱
+				temp.Format(_T("%d"), _socketgameInfo->YuanBap);
+				m_a_list.SetItemText(i, 13, temp);//元宝
+				break;
+			}
+		}
+	}
+
+	delete pBind;
+	delete _socketgameInfo;
+
+	return 0;
 }

@@ -35,6 +35,13 @@ END_MESSAGE_MAP()
 // CMainDlg 消息处理程序
 
 
+BOOL CMainDlg::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	return TRUE;
+}
+
 void CMainDlg::OnBnClickedBtn1()
 {
 }

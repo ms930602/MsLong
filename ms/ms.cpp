@@ -5,7 +5,7 @@
 #include "ms.h"
 #include "self.h"
 
-CSelf* self = nullptr;
+CSelf* pSelf;
 
 // CmsApp
 
@@ -33,15 +33,15 @@ BOOL CmsApp::InitInstance()
 {
 	CWinApp::InitInstance();
 	TRACE("³õÊ¼»¯DLL");
-	self = new CSelf;
-	self->hDll = theApp.m_hInstance;
-	self->InitLoadDLL((void*)1);
+	pSelf = new CSelf;
+	pSelf->hDll = theApp.m_hInstance;
+	pSelf->InitLoadDLL((void*)1);
 	return TRUE;
 }
 
 int CmsApp::ExitInstance()
 {
-	delete self;
+	delete pSelf;
 
 	return CWinApp::ExitInstance();
 }

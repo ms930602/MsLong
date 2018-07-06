@@ -17,6 +17,7 @@ public:
 	/************************************************************************/
 	void HPInit();
 	void HPRelease();
+	void MySendPID();
 private:
 	virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID);
 	virtual EnHandleResult OnSend(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength);
@@ -25,6 +26,7 @@ private:
 private:
 	SocketLoginInfo __SocketLoginInfo;
 	void MySendPackets(DWORD dwConnID, int body_len, char* Socketbody);
+	void HandlePacket(DWORD dwPacketID, CBufferPtr& buffer);
 private:
 	TPkgInfo m_pkgInfo;
 	CTcpPullClient m_Client;

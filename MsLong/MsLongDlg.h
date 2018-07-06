@@ -46,6 +46,4 @@ public:
 	afx_msg void OnTcnSelchangeTabMain(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnClose();
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
-private:
-	CHPServer MyServer;
 };
