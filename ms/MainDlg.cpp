@@ -5,6 +5,9 @@
 #include "ms.h"
 #include "MainDlg.h"
 #include "afxdialogex.h"
+#include "self.h"
+
+extern CSelf* pSelf;
 
 // CMainDlg ¶Ô»°¿ò
 
@@ -29,6 +32,7 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CMainDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_1, &CMainDlg::OnBnClickedBtn1)
 	ON_MESSAGE(WM_MYSTYLEEX_MESSAGE, OnMyStyleMessage)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -52,7 +56,19 @@ LRESULT CMainDlg::OnMyStyleMessage(WPARAM wParam, LPARAM lParam)
 	ShowWindow(SW_RESTORE);
 	SetForegroundWindow();
 
-	//SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 
 	return 0;
+}
+
+
+void CMainDlg::OnClose()
+{
+	if (pSelf->bUiThread)
+	{
+		this->ShowWindow(SW_HIDE);
+		return;
+	}
+
+	CDialogEx::OnClose();
 }

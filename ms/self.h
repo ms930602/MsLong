@@ -18,6 +18,6 @@ public:
 public:
 	HMODULE hDll;//模块句柄
 
-	bool bUiThread;
+	bool bUiThread;//是否创建UI线程
 	HANDLE hUIThread;
 };

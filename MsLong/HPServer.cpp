@@ -227,7 +227,7 @@ BOOL CHPServer::MyLoginInfoIsEmpty()
 void CHPServer::SendUnInJect()
 {
 	TRACE("∑¢ÀÕ–∂‘ÿ–≈œ¢");
-	m_Server.Send(SOCKET_GAME_UNINSTALL, NULL, 0);
+	//MySendPackets(dwConnID, SOCKET_GAME_UNINSTALL, body_len, (char*)&__SocketLoginInfo);
 }
 
 void CHPServer::MySendLoginInfo(CONNID dwConnID, CBufferPtr pbuffer)

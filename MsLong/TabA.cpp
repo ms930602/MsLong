@@ -11,8 +11,10 @@
 
 using namespace std;
 
-CString title = _T("Channel_18农残.exe");//Channel_18农残.exe
+CString title = _T("Game.exe");//Channel_18农残.exe
 HWND g_TabAHwnd = nullptr;
+
+extern CHPServer* MyServer;
 // CTabA 对话框
 
 IMPLEMENT_DYNAMIC(CTabA, CDialogEx)
@@ -195,6 +197,7 @@ void CTabA::OnMenuInJect()
 
 void CTabA::OnMenuUnInJect()
 {
+	MyServer->SendUnInJect();
 }
 
 LRESULT CTabA::OnSocketMsg_ActionInfo(WPARAM wparam, LPARAM lparam)

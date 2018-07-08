@@ -5,7 +5,7 @@
 extern CMessage * pMsg;
 extern CMainDlg * pMainUI;
 
-CString className = _T("WindowsForms10.Window.8.app.0.141b42a_r14_ad1");// TianLongBaBu WndClass | WindowsForms10.Window.8.app.0.141b42a_r14_ad1
+CString className = _T("TianLongBaBu WndClass");// TianLongBaBu WndClass | WindowsForms10.Window.8.app.0.141b42a_r14_ad1
 
 CMessage::CMessage()
 {

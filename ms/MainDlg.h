@@ -26,4 +26,5 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedBtn1();
 	afx_msg LRESULT OnMyStyleMessage(WPARAM wParam, LPARAM lParam);
+	afx_msg void OnClose();
 };

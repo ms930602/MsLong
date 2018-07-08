@@ -201,10 +201,10 @@ void Initial()
 {
 	pClient = new CHPClient();
 	pClient->HPInit();
-	//pMsg = new CMessage();
+	pMsg = new CMessage();
 
-	//pMsg->Init();
-	//pSelf->CreatUI();
+	pMsg->Init();
+	pSelf->CreatUI();
 
 	pClient->SendRoleInfo();
 }

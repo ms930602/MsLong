@@ -75,17 +75,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>F:\VSWork\MsLong\HPSocket\Common\Lib\openssl\15.0\x86\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\HPSocket\Common\Lib\openssl\15.0\x86\include;$(IncludePath)</IncludePath>
     <SourcePath>$(VC_SourcePath);</SourcePath>
-    <LibraryPath>F:\VSWork\MsLong\HPSocket\Common\Lib\openssl\15.0\x86\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\HPSocket\Common\Lib\openssl\15.0\x86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>F:\VSWork\MsLong\HPSocket\Common\Lib\openssl\15.0\x86\include;$(IncludePath)</IncludePath>
-    <LibraryPath>F:\VSWork\MsLong\HPSocket\Common\Lib\openssl\15.0\x86\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\HPSocket\Common\Lib\openssl\15.0\x86\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\HPSocket\Common\Lib\openssl\15.0\x86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
