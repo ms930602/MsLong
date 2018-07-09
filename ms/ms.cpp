@@ -42,6 +42,6 @@ BOOL CmsApp::InitInstance()
 int CmsApp::ExitInstance()
 {
 	delete pSelf;
-
+	TRACE("------client-------> Õ∑≈Self");
 	return CWinApp::ExitInstance();
 }

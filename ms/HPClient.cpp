@@ -76,16 +76,21 @@ EnHandleResult CHPClient::OnReceive(ITcpClient * pSender, CONNID dwConnID, int i
 			if (m_pkgInfo.is_header)
 			{
 				TPkgHeader* pHeader = (TPkgHeader*)buffer.Ptr();
-				TRACE("[Client] head -> seq: %d, body_len: %d\n", pHeader->seq, pHeader->body_len);
-
+				m_pkgInfo.seq = pHeader->seq;
 				required = pHeader->body_len;
+				//接收到只有单纯的包ID这种类型的包
+				if (required == 0)
+				{
+					required = sizeof(TPkgHeader);
+					m_pkgInfo.is_header = false;
+					HandlePacket(m_pkgInfo.seq, (CBufferPtr)NULL);
+				}
 			}
 			else
 			{
-				TPkgBody* pBody = (TPkgBody*)buffer.Ptr();
-				TRACE("[Client] body -> name: %s, age: %d, desc: %s\n", pBody->name, pBody->age, pBody->desc);
-
+				HandlePacket(m_pkgInfo.seq, buffer);
 				required = sizeof(TPkgHeader);
+				m_pkgInfo.seq = NULL;
 			}
 
 			m_pkgInfo.is_header = !m_pkgInfo.is_header;
@@ -145,6 +150,7 @@ void CHPClient::HandlePacket(DWORD dwPacketID, CBufferPtr & buffer)
 	case SOCKET_GAME_UNINSTALL://卸载DLL
 	{
 		TRACE("------client------->卸载游戏");
+		Dll_threadFunc((void*)卸载模块);
 	}
 	break;
 	default:
@@ -220,8 +226,23 @@ UINT __stdcall Dll_threadFunc(void* p)//登录线程函数
 		return 0;
 	}
 
-	dbgPrint("卸载模块");
-	return 0;
+	pClient->HPRelease();
 
+	PostMessage(pMainUI->m_hWnd, WM_CLOSE, NULL, NULL);//向对话框投递销毁窗体的消息
+	pMainUI->EndDialog(-1);
+	if (pSelf->hUIThread)//UI线程
+	{
+		::WaitForSingleObject(pSelf->hUIThread, INFINITE);
+		::CloseHandle(pSelf->hUIThread);
+		TRACE(_T("UI线程安全退出"));
+	}
+
+	pMsg->Release();
+	delete pClient;
+	delete pMainUI;
+	delete pMsg;
+	TRACE("------client------->释放对象完毕 正在卸载DLL %x", pSelf->hDll);
+	FreeLibraryAndExitThread(pSelf->hDll, 0);
+	TRACE("------client------->释放完毕");
 	return 1;
 }

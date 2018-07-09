@@ -48,10 +48,10 @@ void CHPServer::MyDisconnect()
 	m_Server.Disconnect(dwConnID);
 }
 
-void CHPServer::MySendPackets(CONNID dwConnID, DWORD dwpacketID, int body_len, char * Socketbody)
+void CHPServer::MySendPackets(CONNID dwConnID, DWORD seqState, int body_len, char * Socketbody)
 {
 	TPkgHeader header;
-	header.seq = dwpacketID;
+	header.seq = seqState;
 	header.body_len = body_len;
 
 	WSABUF bufs[2];
@@ -60,6 +60,18 @@ void CHPServer::MySendPackets(CONNID dwConnID, DWORD dwpacketID, int body_len, c
 	bufs[1].len = body_len;
 	bufs[1].buf = Socketbody;
 	m_Server.SendPackets(dwConnID, bufs, 2);
+}
+
+void CHPServer::MySendStatusInfo(CONNID dwConnID, DWORD seqState)
+{
+	TPkgHeader header;
+	header.seq = seqState;
+	header.body_len = 0;
+
+	WSABUF buf;
+	buf.len = sizeof(TPkgHeader);
+	buf.buf = (char*)&header;
+	m_Server.SendPackets(dwConnID, &buf, 1);
 }
 
 INT CHPServer::MyDelClient(CONNID dwConnID)
@@ -224,10 +236,16 @@ BOOL CHPServer::MyLoginInfoIsEmpty()
 	return FALSE;
 }
 
-void CHPServer::SendUnInJect()
+void CHPServer::SendUnInJect(SocketBind _SocketBind)
 {
-	TRACE("发送卸载信息");
-	//MySendPackets(dwConnID, SOCKET_GAME_UNINSTALL, body_len, (char*)&__SocketLoginInfo);
+	CONNID dwConnID;
+	if (MyGetClientConnID(&dwConnID, _SocketBind)) {
+		MySendStatusInfo(dwConnID, SOCKET_GAME_UNINSTALL);
+	}
+	else
+	{
+		TRACE(__FUNCTION__"[Server]执行脚本-->>此帐号未绑定链接ID\n");
+	}
 }
 
 void CHPServer::MySendLoginInfo(CONNID dwConnID, CBufferPtr pbuffer)
@@ -323,7 +341,6 @@ EnHandleResult CHPServer::OnReceive(ITcpServer * pSender, CONNID dwConnID, int i
 				if (pInfo->is_header)
 				{
 					TPkgHeader* pHeader = (TPkgHeader*)buffer.Ptr();
-					TRACE("[Server] head -> seq: %d, body_len: %d\n", pHeader->seq, pHeader->body_len);
 					pInfo->seq = pHeader->seq;
 					required = pHeader->body_len;
 					if (required == 0)		//接收到只有单纯的包ID这种类型的包
@@ -407,7 +424,9 @@ void CHPServer::HandlePacket(CONNID dwConnID, DWORD dwPacketID, CBufferPtr pbuff
 		TRACE("游戏帐号的状况信息");
 		/*游戏帐号的状况信息
 		SocketBind _SocketBind = { 0 };
-		if (MyGetClientBind(dwConnID, &_SocketBind))
+		if (
+		
+		(dwConnID, &_SocketBind))
 		{
 			状况信息(_SocketBind, (char*)(BYTE*)pbuffer.Ptr());
 		}

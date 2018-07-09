@@ -20,7 +20,9 @@ public:
 	void MyDisconnect();
 private:
 	//组装封包结构体
-	void MySendPackets(CONNID dwConnID, DWORD dwpacketID, int body_len, char* Socketbody);
+	void MySendPackets(CONNID dwConnID, DWORD seqState, int body_len, char* Socketbody);
+	//发送状态信息
+	void MySendStatusInfo(CONNID dwConnID, DWORD seqState);
 public:
 	vector<SocketBind> m_vClient;//绑定的注入账号
 	queue<SocketLoginInfo> m_vLoginInfo;//要登陆的帐号信息
@@ -37,7 +39,7 @@ public:
 	BOOL MyGetLoginInfo(SocketLoginInfo* pSocketLoginInfo);//获取一个登录信息数据
 	BOOL MyLoginInfoIsEmpty();//获取登录信息数据是否为空
 public:
-	void SendUnInJect();
+	void SendUnInJect(SocketBind _SocketBind);
 
 	//主控向dll发消息
 	void MySendLoginInfo(CONNID dwConnID, CBufferPtr pbuffer);

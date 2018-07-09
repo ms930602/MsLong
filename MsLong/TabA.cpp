@@ -11,7 +11,7 @@
 
 using namespace std;
 
-CString title = _T("Game.exe");//Channel_18农残.exe
+CString title = _T("Channel_18农残.exe");//Channel_18农残.exe Game.exe
 HWND g_TabAHwnd = nullptr;
 
 extern CHPServer* MyServer;
@@ -78,6 +78,7 @@ BOOL CTabA::OnInitDialog()
 	/************************************************************************/
 	m_a_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES | LVS_EX_MULTIWORKAREAS | LVS_EX_INFOTIP | LVS_EX_LABELTIP | LVS_EX_FLATSB);//加上鼠标移动到表格显示全部文字
 	m_a_list.InsertColumn(0, _T("游戏ID"), NULL, 60, -1);
+	m_a_list.InsertColumn(1, _T("登录账号"), NULL, 100, -1);
 	m_a_list.InsertColumn(1, _T("脚本"), NULL, 100, -1);
 	m_a_list.InsertColumn(2, _T("状况"), NULL, 100, -1);
 	m_a_list.InsertColumn(3, _T("断线"), NULL, 50, -1);
@@ -127,6 +128,13 @@ void CTabA::OnNMRClickListA(NMHDR *pNMHDR, LRESULT *pResult)
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: 在此添加控件通知处理程序代码
 	*pResult = 0;
+
+	//首先得到点击的位置
+	POSITION pos = m_a_list.GetFirstSelectedItemPosition();
+	if (pos == NULL)
+	{
+		return;
+	}
 
 	CMenu menu, *pPopup;
 	menu.LoadMenu(IDR_MENU1);
@@ -197,7 +205,24 @@ void CTabA::OnMenuInJect()
 
 void CTabA::OnMenuUnInJect()
 {
-	MyServer->SendUnInJect();
+	//首先得到点击的位置
+	POSITION pos = m_a_list.GetFirstSelectedItemPosition();
+	if (pos == NULL)
+	{
+		MessageBox(_T("请选择一项窗口"), _T("提示"), MB_ICONEXCLAMATION);
+		return;
+	}
+	int size = m_a_list.GetSelectedCount();
+	if (size > 1) {
+		MessageBox(_T("一次只能选择一条"), _T("提示"), MB_ICONEXCLAMATION);
+	}
+	//得到行号，通过POSITION转化
+	int index = m_a_list.GetNextSelectedItem(pos);
+	CString pID = m_a_list.GetItemText(index, 0);
+	CString loginName = m_a_list.GetItemText(index, 1);
+	SocketBind _SocketBind = { 0 };
+	_SocketBind.dwGameID = _ttoi(pID);
+	MyServer->SendUnInJect(_SocketBind);
 }
 
 LRESULT CTabA::OnSocketMsg_ActionInfo(WPARAM wparam, LPARAM lparam)
