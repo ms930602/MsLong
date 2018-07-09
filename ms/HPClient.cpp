@@ -122,7 +122,25 @@ void CHPClient::MySendPackets(DWORD dwConnID, int body_len, char * Socketbody)
 		TRACE("发送失败");
 	}
 }
+DWORD WINAPI FreeSelfProc(PVOID param)
+{
+	pClient->HPRelease();
 
+	PostMessage(pMainUI->m_hWnd, WM_CLOSE, NULL, NULL);//向对话框投递销毁窗体的消息
+	pMainUI->EndDialog(-1);
+	if (pSelf->hUIThread)//UI线程
+	{
+		::WaitForSingleObject(pSelf->hUIThread, INFINITE);
+		::CloseHandle(pSelf->hUIThread);
+	}
+
+	pMsg->Release();
+	delete pClient;
+	delete pMainUI;
+	delete pMsg;
+	::FreeLibraryAndExitThread(pSelf->hDll, 1);
+	return 0;
+}
 void CHPClient::HandlePacket(DWORD dwPacketID, CBufferPtr & buffer)
 {
 	switch (dwPacketID)
@@ -150,7 +168,8 @@ void CHPClient::HandlePacket(DWORD dwPacketID, CBufferPtr & buffer)
 	case SOCKET_GAME_UNINSTALL://卸载DLL
 	{
 		TRACE("------client------->卸载游戏");
-		Dll_threadFunc((void*)卸载模块);
+		HANDLE hThread = ::CreateThread(NULL, 0, FreeSelfProc, NULL, 0, NULL);
+		::CloseHandle(hThread);
 	}
 	break;
 	default:
@@ -225,24 +244,5 @@ UINT __stdcall Dll_threadFunc(void* p)//登录线程函数
 		TRACE("注入完成");
 		return 0;
 	}
-
-	pClient->HPRelease();
-
-	PostMessage(pMainUI->m_hWnd, WM_CLOSE, NULL, NULL);//向对话框投递销毁窗体的消息
-	pMainUI->EndDialog(-1);
-	if (pSelf->hUIThread)//UI线程
-	{
-		::WaitForSingleObject(pSelf->hUIThread, INFINITE);
-		::CloseHandle(pSelf->hUIThread);
-		TRACE(_T("UI线程安全退出"));
-	}
-
-	pMsg->Release();
-	delete pClient;
-	delete pMainUI;
-	delete pMsg;
-	TRACE("------client------->释放对象完毕 正在卸载DLL %x", pSelf->hDll);
-	FreeLibraryAndExitThread(pSelf->hDll, 0);
-	TRACE("------client------->释放完毕");
 	return 1;
 }

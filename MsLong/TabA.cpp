@@ -11,7 +11,7 @@
 
 using namespace std;
 
-CString title = _T("Channel_18ХЉВа.exe");//Channel_18ХЉВа.exe Game.exe
+CString title = _T("Game.exe");
 HWND g_TabAHwnd = nullptr;
 
 extern CHPServer* MyServer;
