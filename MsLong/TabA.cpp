@@ -15,7 +15,7 @@ CString title = _T("Game.exe");
 HWND g_TabAHwnd = nullptr;
 
 extern CHPServer* MyServer;
-// CTabA 对话框
+// CTabA 对话框 
 
 IMPLEMENT_DYNAMIC(CTabA, CDialogEx)
 
