@@ -4,6 +4,8 @@
 #include "MainDlg.h"
 #include "Message.h"
 #include "ms.h"
+#include "MonsterService.h"
+#include "RoleService.h"
 
 #define DEFAULT_CONTENT	_T("text to be sent")
 #define DEFAULT_ADDRESS	_T("127.0.0.1")
@@ -14,6 +16,8 @@ extern CSelf* pSelf;
 
 CMainDlg * pMainUI;
 CMessage * pMsg;
+CMsMonster* pMonster;
+CRoleService * pRoleService;
 
 void CHPClient::HPInit()
 {
@@ -177,6 +181,8 @@ DWORD WINAPI FreeSelfProc(PVOID param)
 	TRACE("п╤ть->pMainUI");
 	delete pMsg;
 	TRACE("п╤ть->pMsg");
+	delete pMonster;
+	delete pRoleService;
 	::FreeLibraryAndExitThread(pSelf->hDll, 1);
 	return 0;
 }
@@ -185,9 +191,13 @@ DWORD WINAPI FreeSelfProc(PVOID param)
 void Initial()
 {
 	++pSelf->atomic_int_work_thread;
+	
 	pClient = new CHPClient();
-	pClient->HPInit();
 	pMsg = new CMessage();
+	pMonster = new CMsMonster();
+	pRoleService = new CRoleService();
+
+	pClient->HPInit();
 	pMsg->Init();
 	pSelf->CreatUI();
 	
@@ -248,8 +258,11 @@ UINT CHPClient::SendRoleInfo()
 	_SocketGameRoleInfo.RoleTi = pMsg->GetData("HP");
 	_SocketGameRoleInfo.RoleFa = pMsg->GetData("MP");
 	strcpy_s(_SocketGameRoleInfo.GameMap, sMapName.c_str());
-	_SocketGameRoleInfo.PointX =200;
-	_SocketGameRoleInfo.PointY = 100;
+	
+	TMsRolePos pos = pRoleService->GetPos();
+
+	_SocketGameRoleInfo.PointX = (int)pos.fx;
+	_SocketGameRoleInfo.PointY = (int)pos.fy;
 
 	_SocketGameRoleInfo.NoBindGold = pMsg->GetData("MONEY");
 	_SocketGameRoleInfo.BindGold = pMsg->GetData("MONEY_JZ");

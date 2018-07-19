@@ -15,14 +15,26 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RoleService.h">
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="default.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterService.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MsBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="RoleService.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MonsterService.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="RoleService.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
