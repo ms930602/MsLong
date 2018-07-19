@@ -160,12 +160,19 @@ void CHPClient::MySendPackets(DWORD dwConnID, int body_len, char * Socketbody)
 }
 DWORD WINAPI FreeSelfProc(PVOID param)
 {
+	pSelf->bLoginAgain = false;
 	pSelf->bInitLoadThread = false;
 	pSelf->bUiThread = false;
 
 	while (pSelf->atomic_int_work_thread > 0) Sleep(50);//等待所有线程全部自然退出
 
 	PostMessage(pMainUI->m_hWnd, WM_CLOSE, NULL, NULL);//向对话框投递销毁窗体的消息
+
+	if (pSelf->hAgainLoginThread)//退出登录绑定线程
+	{
+		::WaitForSingleObject(pSelf->hAgainLoginThread, INFINITE);
+		::CloseHandle(pSelf->hAgainLoginThread);
+	}
 
 	if (pSelf->hUIThread)//UI线程
 	{
@@ -200,12 +207,12 @@ void Initial()
 	pClient->HPInit();
 	pMsg->Init();
 	pSelf->CreatUI();
-	
+/*
 	while (pSelf->bInitLoadThread)
 	{
 		pClient->MyReconnection();
 		Sleep(5000);
-	}
+	}*/
 }
 
 void CHPClient::HandlePacket(DWORD dwPacketID, CBufferPtr & buffer)
@@ -258,12 +265,11 @@ UINT CHPClient::SendRoleInfo()
 	_SocketGameRoleInfo.RoleTi = pMsg->GetData("HP");
 	_SocketGameRoleInfo.RoleFa = pMsg->GetData("MP");
 	strcpy_s(_SocketGameRoleInfo.GameMap, sMapName.c_str());
-	
+/*
 	TMsRolePos pos = pRoleService->GetPos();
-
 	_SocketGameRoleInfo.PointX = (int)pos.fx;
 	_SocketGameRoleInfo.PointY = (int)pos.fy;
-
+	*/
 	_SocketGameRoleInfo.NoBindGold = pMsg->GetData("MONEY");
 	_SocketGameRoleInfo.BindGold = pMsg->GetData("MONEY_JZ");
 	_SocketGameRoleInfo.YuanBap = pMsg->GetData("YUANBAO");
@@ -285,4 +291,39 @@ UINT __stdcall Dll_threadFunc(void* p)//登录线程函数
 		return 0;
 	}
 	return 1;
+}
+
+UINT __stdcall Login_AgainFunc(void* p)//登录线程函数
+{
+	for (size_t i = 0; i < 10 && pSelf->bLoginAgain; i++)
+	{
+		if (!pMsg->msg_getnumber("if IsWindowShow(\"MiniMap\") then g_GetValue = 1 else g_GetValue = 0 end"))//迷你地图
+		{
+			break;
+		}
+		Sleep(2000);
+	}
+
+	while (pSelf->bLoginAgain)
+	{
+		if (pMsg->msg_getnumber("if IsWindowShow(\"MiniMap\") then g_GetValue = 1 else g_GetValue = 0 end"))//迷你地图
+		{
+			Sleep(1000);//暂时不延迟不行
+			//pFileSystem->FileInitial();//初始化文件
+			::SendMessage(pMainUI->m_hWnd, WM_MY_MESSAGE, 0, 3);
+			break;
+		}
+
+		Sleep(2000);
+	}
+
+	if (pSelf->bLoginAgain)
+	{
+		::CloseHandle(pSelf->hAgainLoginThread);
+		pSelf->hAgainLoginThread = NULL;
+	}
+
+	TRACE("退出登录绑定线程");
+
+	return 0;
 }

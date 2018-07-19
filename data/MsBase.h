@@ -1,6 +1,5 @@
 #pragma once
-#include <Windows.h>
-
+#include "default.h"
 
 #define     V_LUA_STATE           0xB58A1C       //lua指针基址
 #define     V_MAP_BASE            0xB56BBC      //小地图基址

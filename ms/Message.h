@@ -26,16 +26,9 @@ public:
 		subclass_game_wndproc();//子类化窗口过程
 		InitLuaFun();//初始化游戏lua库函数
 		lua_state = GetLuaState();//获取游戏lua状态机指针
-		/*
 		
-		wchar_t lpBuffer[MAX_PATH] = { 0 };
-		GetSystemDirectory(lpBuffer, MAX_PATH);
-		CString strPAth(lpBuffer);
-		CString strPAth2;
-		strPAth2.Format(_T("\\Client%x.cfg"), GetCurrentProcessId());
-		strPAth += strPAth2;
-		
-		TRACE(strPAth);*/
+		//我的文档的路径
+		LUAInitialize();
 	};
 	void Release() {//卸载子类化
 		un_subclass_game_wndproc();
@@ -86,6 +79,7 @@ private:
 	void un_subclass_game_wndproc();	//卸载子类化窗口过程
 	int InitLuaFun();//获取lua库函数
 	int GetLuaState();//获取游戏中lua状态指针
+	BOOL LUAInitialize();//创建系统资源文件syslua
 public:
 	void msg_dostring(const char* _Format, ...);//执行dostring
 	int msg_getnumber(char* _Format, ...);//获取数字

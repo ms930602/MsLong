@@ -31,6 +31,7 @@ void CMainDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CMainDlg, CDialogEx)
+	ON_MESSAGE(WM_MY_MESSAGE, OnMyMessage)
 	ON_MESSAGE(WM_MYSTYLEEX_MESSAGE, OnMyStyleMessage)
 	ON_WM_CLOSE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_MAIN, &CMainDlg::OnTcnSelchangeTabMain)
@@ -76,6 +77,29 @@ LRESULT CMainDlg::OnMyStyleMessage(WPARAM wParam, LPARAM lParam)
 
 	SetWindowPos(&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 
+	return 0;
+}
+
+LRESULT CMainDlg::OnMyMessage(WPARAM wParam, LPARAM lParam)
+{
+	switch ((int)lParam)
+	{
+	case 0://开始按钮禁用
+		TRACE("OnMyMessage --> 0");
+		break;
+	case 1://修改开始按钮信息
+		TRACE("OnMyMessage --> 1");
+		break;
+	case 2://取消开始按钮禁用状态
+		TRACE("OnMyMessage --> 2");
+		break;
+	case 3://各个窗口加载数据
+		TRACE("OnMyMessage --> 3");
+		break;
+	case 4:
+		TRACE("OnMyMessage --> 4");
+		break;
+	}
 	return 0;
 }
 

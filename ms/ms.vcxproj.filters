@@ -161,6 +161,9 @@
     <ClInclude Include="DlgTabB.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GameFunction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ms.def">
@@ -169,6 +172,7 @@
     <None Include="res\ms.rc2">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="System.lua" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ms.rc">

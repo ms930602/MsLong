@@ -28,6 +28,7 @@ public:
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg LRESULT OnMyStyleMessage(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnMyMessage(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnClose();
 	CTabCtrl m_Tab;
 	int m_CurSelTab;

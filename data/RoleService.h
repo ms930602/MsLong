@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "default.h"
 #include <vector>
 #include <string>
 using namespace std;
@@ -113,7 +113,7 @@ struct TMsRoleExp
 class CRoleService
 {
 public:
-	CRoleService() {};
+	CRoleService() { ::OutputDebugStringA("创建 CRoleService"); };
 	~CRoleService() {};
 
 	TMsHPMP GetHPMP();//人物的当前HPMP最大HPMP

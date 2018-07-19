@@ -1,5 +1,5 @@
-#include "RoleService.h"
 #include "MsBase.h"
+#include "RoleService.h"
 /*
 #define  ROLEOFFSET(data)\
 data = *(PULONG)Const_Role_Base;\
@@ -13,39 +13,23 @@ data = *(PULONG)K_MAP_BASE;\
 data = *(PULONG)(data + 0xAC);\
 
 
-TMsHPMP CRoleService::GetHPMP()
-{
-	return TMsHPMP();
-}
-
 TMsRolePos CRoleService::GetPos()
 {
 	TMsRolePos tRolePos;
-
 	try
 	{
 		ULONG data = 0;
 		MAPOBJECT(data)
-			tRolePos.fx = *(float*)(data + 0x48);
-		tRolePos.fy = *(float*)(data + 0x50);
+			tRolePos.fx = *(float*)(data + 0x2C);
+		tRolePos.fy = *(float*)(data + 0x34);
 		tRolePos.bool_ret = TRUE;
 	}
 	catch (...)
 	{
-		::OutputDebugString(__FUNCTION__);
+		::OutputDebugStringA(__FUNCTION__);
 	}
 
 	return tRolePos;
-}
-
-TMsRoleInfo CRoleService::GetRoleInfo()
-{
-	return TMsRoleInfo();
-}
-
-TMsRoleExp CRoleService::GetRoleExp()
-{
-	return TMsRoleExp();
 }
 
 ULONG CRoleService::getobject()

@@ -1,8 +1,10 @@
 #include "stdafx.h"
+#include "self.h"
 #include "Message.h"
 #include "MainDlg.h"
 #include "MsBase.h"
 
+extern CSelf* pSelf;
 extern CMessage * pMsg;
 extern CMainDlg * pMainUI;
 
@@ -37,6 +39,21 @@ const char * CMessage::telua_tostring(int n)
 	}
 }
 
+int myluaregstertogame(int a)
+{
+	pSelf->CreatAgainLogin();
+
+	return 0;
+}
+
+int myluadbgprint(int a)
+{
+	
+	TRACE(pMsg->telua_tostring(-1));
+
+	return 0;
+}
+
 LRESULT CMessage::our_wndproc(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (wMsg == LUA_MEASSAGE)
@@ -50,6 +67,12 @@ LRESULT CMessage::our_wndproc(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam
 	else if (wMsg == LUA_GETSTRING)
 	{
 		pMsg->telua_getstring((char*)lParam, (char*)wParam);
+	}
+	else if (wMsg == LUA_REGISTEREX)//加载lua lib文件
+	{
+		pMsg->telua_loadfile((char*)lParam);
+		pMsg->telua_register("GMsLuaRegsterToGame", (int)myluaregstertogame);
+		pMsg->telua_register("GMsLuaDugPrint", (int)myluadbgprint);
 	}
 	//////////////////////////////////////////////////////////////////////////
 	/////////////////////////////辅助窗口的显示相关//////////////////////////
@@ -317,6 +340,64 @@ int CMessage::GetLuaState()
 	}
 
 	return L;
+}
+
+BOOL CMessage::LUAInitialize()
+{
+	CHAR lpBuffer[MAX_PATH] = { 0 };
+	HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, lpBuffer);
+	CString strPAth(lpBuffer);
+	CString strPAth2;
+	strPAth2.Format(_T("\\Client%x.cfg"), GetCurrentProcessId());
+	strPAth += strPAth2;
+
+	HRSRC hResc = ::FindResource(pSelf->hDll, MAKEINTRESOURCE(IDR_RCDATA1), RT_RCDATA);
+	if (hResc == NULL)
+	{
+		TRACE("LUAInitialize GetLastError  ==   %d", ::GetLastError());
+		return FALSE;
+	}
+
+	DWORD dwImageSize = SizeofResource(pSelf->hDll, hResc);
+
+	HGLOBAL hResourceImage = ::LoadResource(pSelf->hDll, hResc);
+	if (hResourceImage == NULL)
+	{
+		TRACE("LUAInitialize ERROR %s", __FUNCTION__);
+		return FALSE;
+	}
+	PVOID pMemory = ::LockResource(hResourceImage);
+	if (pMemory == NULL)
+	{
+		TRACE("LUAInitialize ERROR %s", __FUNCTION__);
+		return FALSE;
+	}
+
+	HANDLE hFile = CreateFile(strPAth, GENERIC_WRITE, FILE_SHARE_READ,
+		NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		TRACE("LUAInitialize ERROR %s", __FUNCTION__);
+		return FALSE;
+	}
+
+	DWORD dwByteWrite;
+	if (!WriteFile(hFile, pMemory, dwImageSize, &dwByteWrite, NULL))
+	{
+		CloseHandle(hFile);
+		return FALSE;
+	}
+
+	if (dwByteWrite != dwImageSize)
+	{
+		CloseHandle(hFile);
+		return FALSE;
+	}
+	::CloseHandle(hFile);
+	Sleep(1000);
+	::SendMessage(GamehWnd, LUA_REGISTEREX, 0, (LPARAM)strPAth.GetString());//注册lua，加载lua_lib
+	DeleteFile(strPAth);
+	return TRUE;
 }
 
 void CMessage::msg_dostring(const char * _Format, ...)

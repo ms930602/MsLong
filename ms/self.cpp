@@ -38,3 +38,9 @@ void CSelf::CreatUI()//创建UI线程
 	bUiThread = true;
 	hUIThread = (HANDLE)_beginthreadex(NULL, 0, &UI_ThreadFunc, this, 0, NULL);
 }
+
+void CSelf::CreatAgainLogin()
+{
+	bLoginAgain = true;
+	hAgainLoginThread = (HANDLE)_beginthreadex(NULL, 0, &Login_AgainFunc, NULL, 0, NULL);
+}
