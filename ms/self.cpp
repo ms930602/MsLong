@@ -18,8 +18,11 @@ CSelf::~CSelf()
 
 void CSelf::InitLoadDLL(void* p)
 {
+	bInitLoadThread = true;
 	HANDLE	hlg = (HANDLE)_beginthreadex(NULL, 0, &Dll_threadFunc, (void*)p, 0, NULL);
 	::CloseHandle(hlg);
+	TRACE("½áÊøinit load dll");
+	--atomic_int_work_thread;
 }
 
 UINT __stdcall UI_ThreadFunc(LPVOID p)

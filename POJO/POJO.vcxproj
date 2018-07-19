@@ -18,6 +18,13 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MsBase.h" />
+    <ClInclude Include="RoleService.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RoleService.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{360FAD86-3341-43A1-914D-DCF93DD2D174}</ProjectGuid>
     <RootNamespace>POJO</RootNamespace>

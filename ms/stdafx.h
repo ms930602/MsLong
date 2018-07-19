@@ -4,6 +4,8 @@
 
 #pragma once
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #ifndef VC_EXTRALEAN
 #define VC_EXTRALEAN            // 从 Windows 头中排除极少使用的资料
 #endif
@@ -70,7 +72,7 @@ void DPrint(IN  const TF Format, IN const TS... list)
 		//CString Cstr;
 		//Cstr.Format(Format, list...);
 		//Cstr = _T("[WG][dll]") + Cstr;
-		::OutputDebugString(CString(Format));//调试输出到软件
+		//TRACE(Cstr);
 		//WriteLog(Cstr);//写日志
 }
 	catch (...)
@@ -86,3 +88,9 @@ void DPrint(IN  const TF Format, IN const TS... list)
 #else
 #define dbgPrint( _x_ ,...)
 #endif
+
+struct RolePos
+{
+	int PointX;//X坐标
+	int PointY;//Y坐标
+};

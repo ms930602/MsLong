@@ -24,7 +24,7 @@ void CHPClient::HPInit()
 
 	if (m_Client.Start(strAddress, usPort, 0))
 	{
-		TRACE("连接成功！IP:%s 端口:%d -->发送连接ID", strAddress, usPort);
+		TRACE("连接成功！IP:%c 端口:%d -->发送连接ID", strAddress, usPort);
 		MySendPID();
 	}
 	else {
@@ -34,13 +34,45 @@ void CHPClient::HPInit()
 
 void CHPClient::HPRelease()
 {
-	m_Client.Stop();
+	if (m_Client.Stop()) {
+		TRACE("客户端退出成功");
+	}
+	else
+	{
+		TRACE("退出失败");
+	}
 }
 
 void CHPClient::MySendPID()
 {
 	DWORD dwGameID = GetCurrentProcessId();
 	MySendPackets(SOCKET_LINK, sizeof(dwGameID), (char*)&dwGameID);
+}
+
+void CHPClient::MyReconnection()
+{
+	if (m_Client.GetState() == SS_STOPPED)
+	{
+		m_pkgInfo.Reset();
+		CString strAddress = DEFAULT_ADDRESS;
+		CString strPort = DEFAULT_PORT;
+		USHORT usPort = (USHORT)_ttoi(strPort);
+		if (m_Client.Start(strAddress, usPort, 1))
+		{
+			MySendReconnection();//发送重连中控
+		}
+	}
+	else
+	{
+		SendRoleInfo();
+	}
+}
+
+void CHPClient::MySendReconnection()
+{
+	SocketBind _SocketBind = { 0 };
+	_SocketBind.dwGameID = GetCurrentProcessId();
+	MySendPackets(SOCKET_LINK_重连, sizeof(_SocketBind), (char*)&_SocketBind);
 }
 
 EnHandleResult CHPClient::OnConnect(ITcpClient * pSender, CONNID dwConnID)
@@ -124,10 +156,13 @@ void CHPClient::MySendPackets(DWORD dwConnID, int body_len, char * Socketbody)
 }
 DWORD WINAPI FreeSelfProc(PVOID param)
 {
-	pClient->HPRelease();
+	pSelf->bInitLoadThread = false;
+	pSelf->bUiThread = false;
+
+	while (pSelf->atomic_int_work_thread > 0) Sleep(50);//等待所有线程全部自然退出
 
 	PostMessage(pMainUI->m_hWnd, WM_CLOSE, NULL, NULL);//向对话框投递销毁窗体的消息
-	pMainUI->EndDialog(-1);
+
 	if (pSelf->hUIThread)//UI线程
 	{
 		::WaitForSingleObject(pSelf->hUIThread, INFINITE);
@@ -135,12 +170,34 @@ DWORD WINAPI FreeSelfProc(PVOID param)
 	}
 
 	pMsg->Release();
+	pClient->HPRelease();
 	delete pClient;
+	TRACE("卸载->pClient");
 	delete pMainUI;
+	TRACE("卸载->pMainUI");
 	delete pMsg;
+	TRACE("卸载->pMsg");
 	::FreeLibraryAndExitThread(pSelf->hDll, 1);
 	return 0;
 }
+
+
+void Initial()
+{
+	++pSelf->atomic_int_work_thread;
+	pClient = new CHPClient();
+	pClient->HPInit();
+	pMsg = new CMessage();
+	pMsg->Init();
+	pSelf->CreatUI();
+	
+	while (pSelf->bInitLoadThread)
+	{
+		pClient->MyReconnection();
+		Sleep(5000);
+	}
+}
+
 void CHPClient::HandlePacket(DWORD dwPacketID, CBufferPtr & buffer)
 {
 	switch (dwPacketID)
@@ -179,59 +236,29 @@ void CHPClient::HandlePacket(DWORD dwPacketID, CBufferPtr & buffer)
 
 UINT CHPClient::SendRoleInfo()
 {
-	//判断人物血是否大于0,大于则没3秒发送一次
+	//判断人物血是否大于0,大于则每3秒发送一次
 	SocketGameRoleInfo _SocketGameRoleInfo = { 0 };
-	strcpy_s(_SocketGameRoleInfo.RoleName, "测试角色");
-	_SocketGameRoleInfo.RoleLevel = 95;
-	_SocketGameRoleInfo.RoleMenPai = 1;
-	_SocketGameRoleInfo.RoleTi = 0;
-	_SocketGameRoleInfo.RoleFa = 0;
-	strcpy_s(_SocketGameRoleInfo.GameMap, "洛阳");
+
+	string sRoleName = pMsg->msg_getstring("MyRoleName", "MyRoleName = Player:GetName();");
+	string sMapName  = pMsg->msg_getstring("sValue", "sValue = GetCurrentSceneName();");
+
+	strcpy_s(_SocketGameRoleInfo.RoleName, sRoleName.c_str());
+	_SocketGameRoleInfo.RoleLevel = pMsg->GetData("LEVEL");
+	_SocketGameRoleInfo.RoleMenPai = pMsg->GetData("MEMPAI");
+	_SocketGameRoleInfo.RoleTi = pMsg->GetData("HP");
+	_SocketGameRoleInfo.RoleFa = pMsg->GetData("MP");
+	strcpy_s(_SocketGameRoleInfo.GameMap, sMapName.c_str());
 	_SocketGameRoleInfo.PointX =200;
 	_SocketGameRoleInfo.PointY = 100;
-	int JinQian = 500;
-	if (JinQian >= 0)
-	{
-		_SocketGameRoleInfo.NoBindGold = JinQian;
-	}
-	else
-	{
-		_SocketGameRoleInfo.NoBindGold = 0;
-	}
-	int JiaoZi = 1010;
-	if (JiaoZi >= 0)
-	{
-		_SocketGameRoleInfo.BindGold = JiaoZi;
-	}
-	else
-	{
-		_SocketGameRoleInfo.BindGold = 0;
-	}
-	int YuanBao = 4000;
-	if (YuanBao >= 0)
-	{
-		_SocketGameRoleInfo.YuanBap = YuanBao;
-	}
-	else
-	{
-		_SocketGameRoleInfo.YuanBap = 0;
-	}
+
+	_SocketGameRoleInfo.NoBindGold = pMsg->GetData("MONEY");
+	_SocketGameRoleInfo.BindGold = pMsg->GetData("MONEY_JZ");
+	_SocketGameRoleInfo.YuanBap = pMsg->GetData("YUANBAO");
+
 	_SocketGameRoleInfo.RoleStatus = 1;
 
 	MySendPackets(SOCKET_USERINFO, sizeof(_SocketGameRoleInfo), (char*)&_SocketGameRoleInfo);
 	return 0;
-}
-
-void Initial()
-{
-	pClient = new CHPClient();
-	pClient->HPInit();
-	pMsg = new CMessage();
-
-	pMsg->Init();
-	pSelf->CreatUI();
-
-	pClient->SendRoleInfo();
 }
 
 UINT __stdcall Dll_threadFunc(void* p)//登录线程函数
@@ -241,7 +268,7 @@ UINT __stdcall Dll_threadFunc(void* p)//登录线程函数
 	if (nType == 注入模块)
 	{
 		Initial();
-		TRACE("注入完成");
+		TRACE("加载线程执行完毕");
 		return 0;
 	}
 	return 1;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Message.h"
 #include "MainDlg.h"
+#include "MsBase.h"
 
 extern CMessage * pMsg;
 extern CMainDlg * pMainUI;
@@ -25,8 +26,31 @@ CString CMessage::GetWindowTitle(HWND hwnd)
 	return CStitle;
 }
 
+const char * CMessage::telua_tostring(int n)
+{
+	__try {
+		return GLua_Tostring(lua_state, n);
+	}
+	__except (1) {
+		TRACE(__FUNCTION__);
+		return "ERROR :lua_Tostring";
+	}
+}
+
 LRESULT CMessage::our_wndproc(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (wMsg == LUA_MEASSAGE)
+	{
+		pMsg->telua_dostring((char*)lParam);
+	}
+	else if (wMsg == LUA_GETVALUE)
+	{
+		pMsg->telua_getnumber((char*)lParam, (PVOID)wParam);
+	}
+	else if (wMsg == LUA_GETSTRING)
+	{
+		pMsg->telua_getstring((char*)lParam, (char*)wParam);
+	}
 	//////////////////////////////////////////////////////////////////////////
 	/////////////////////////////辅助窗口的显示相关//////////////////////////
 	if (wMsg == WM_KEYDOWN&&wParam == VK_HOME//判断热键键值
@@ -46,6 +70,132 @@ LRESULT CMessage::our_wndproc(HWND hWnd, UINT wMsg, WPARAM wParam, LPARAM lParam
 	//////////////////////////////////////////////////////////////////////////
 
 	return ::CallWindowProc(pMsg->funWndProc, hWnd, wMsg, wParam, lParam);
+}
+
+int CMessage::telua_loadfile(const char * file)
+{
+	__try {
+		if (GLua_Loadfile(lua_state, file) || GpLua_Call(lua_state, 0, 0, 0))
+		{
+			return 1;
+		}
+		return 0;
+	}
+	__except (1) {
+		TRACE(__FUNCTION__);
+		return -1;
+	}
+}
+
+bool CMessage::telua_register(const char * FuncName, int pFun)
+{
+	__try {
+		GLua_Pushstring(lua_state, FuncName);
+		GLua_Pushcclosure(lua_state, pFun, 0);
+		GLua_Settable(lua_state, -10001);
+		return true;
+	}
+	__except (1) {
+		TRACE(__FUNCTION__);
+		return false;
+	}
+}
+
+bool CMessage::telua_dostring(const char * args)
+{
+	__try {
+		GLua_Dostring(lua_state, args);
+		return true;
+	}
+	__except (1) { TRACE(__FUNCTION__); return false; }
+}
+
+bool CMessage::telua_getglobal(const char * name)
+{
+	__try {
+		GLua_Pushstring(lua_state, name);
+		GLua_Gettable(lua_state, -10001);
+		return true;
+	}
+	__except (1) { TRACE(__FUNCTION__); return false; }
+}
+
+double CMessage::telua_tonumber(int n)
+{
+	__try {
+		return GLua_Tonumber(lua_state, n);
+	}
+	__except (1) {
+		TRACE(__FUNCTION__);
+		return 1.234567;
+	}
+}
+
+void CMessage::telua_pop(int n)
+{
+	__try {
+		GLua_Settop(lua_state, -(n)-1);
+	}
+	__except (1) {
+		dbgPrint(__FUNCTION__);
+	}
+}
+
+bool CMessage::telua_getnumber(const char * buf, PVOID out)
+{
+	__try {
+		if (telua_dostring(buf))
+		{
+			if (telua_getglobal("g_GetValue"))
+			{
+				*(int*)out = (int)telua_tonumber(-1);
+				telua_pop(1);
+				return true;
+			}
+			else
+			{
+				TRACE("%s telua_getglobal erro", __FUNCTION__);
+				return false;
+			}
+		}
+		else
+		{
+			TRACE("%s telua_dostring erro", __FUNCTION__);
+			return false;
+		}
+	}
+	__except (1) {
+		TRACE(__FUNCTION__); return false;
+	}
+}
+
+bool CMessage::telua_getstring(const char * buf, const char * want_get_string)
+{
+	__try {
+		if (telua_dostring(buf))
+		{
+			if (telua_getglobal(want_get_string))
+			{
+				const char* str = telua_tostring(-1);
+				sprintf((char*)buf, str);
+				telua_pop(1);
+				return true;
+			}
+			else
+			{
+				TRACE("%s telua_getglobal erro", __FUNCTION__);
+				return false;
+			}
+		}
+		else
+		{
+			TRACE("%s telua_getglobal erro", __FUNCTION__);
+			return false;
+		}
+	}
+	__except (1) {
+		TRACE(__FUNCTION__); return false;
+	}
 }
 
 HWND CMessage::GetGameWindow()
@@ -99,7 +249,7 @@ void CMessage::un_subclass_game_wndproc()
 {
 	if (GamehWnd && funWndProc)
 	{
-		dbgPrint(_T("卸载子类化窗口"));
+		TRACE(_T("卸载子类化窗口"));
 		::SetWindowLong(GamehWnd, GWL_WNDPROC, (LONG)funWndProc);
 	}
 }
@@ -123,10 +273,12 @@ int CMessage::InitLuaFun()
 		if (GLua_Dostring && GLua_Gettable && GLua_Pushstring
 			&& GLua_Tonumber && GLua_Tostring &&GLua_Settop)
 		{
+			TRACE("获取lua函数成功");
 			return 1;//获取lua函数地址成功
 		}
 		else
 		{
+			TRACE("获取lua函数失败");
 			return 0;//获取地址失败，模块句柄获取成功
 		}
 	}
@@ -143,17 +295,17 @@ int CMessage::GetLuaState()
 			CString CStitle = GetWindowTitle(GamehWnd);
 			if (CStitle.Find(_T("《新天龙八部》"), 0) != -1)
 			{
-				DWORD LUASTATE_BASE = 0x0;
 				__asm
 				{
-					mov ecx, LUASTATE_BASE;
-					mov ecx, [ecx];
-					mov edx, [ecx];
-					call[edx + 0x3c];
-					mov eax, [eax];
+					mov  ecx, K_LUASTATE_BASE;
+					mov  ecx, [ecx];
+					mov  edx, [ecx];
+					call [edx + 0x3c];
+					mov  eax, [eax];
 					mov  L, eax;
 				}
-				dbgPrint("L  %x", L);
+				TRACE("L  %x", L);
+				return L;
 			}
 			Sleep(500);
 		}
@@ -161,8 +313,87 @@ int CMessage::GetLuaState()
 	catch (...)
 	{
 		L = -1;
-		dbgPrint(__FUNCTION__);
+		TRACE(__FUNCTION__);
 	}
 
 	return L;
+}
+
+void CMessage::msg_dostring(const char * _Format, ...)
+{
+	CriticalSectionLock lock(&m_State);
+
+	try
+	{
+		char do_stringBuf[2048] = { 0 };//用于存放do_string的字符串缓冲区
+		va_list list;
+		va_start(list, _Format);
+		vsprintf(do_stringBuf, _Format, list);
+		va_end(list);
+		::SendMessage(GamehWnd, LUA_MEASSAGE, 0, (LPARAM)do_stringBuf);
+	}
+	catch ( ... )
+	{
+		TRACE(__FUNCTION__);
+	}
+}
+
+int CMessage::msg_getnumber(char * _Format, ...)
+{
+	CriticalSectionLock lock(&m_State);
+
+	int nValue = 0;
+	try
+	{
+		char getnumberBuf[2048] = { 0 };//用于存放getnumber的字符串缓冲区
+		va_list list;
+		va_start(list, _Format);
+		vsprintf(getnumberBuf, _Format, list);
+		va_end(list);
+		::SendMessage(GamehWnd, LUA_GETVALUE, (WPARAM)&nValue, (LPARAM)getnumberBuf);
+	}
+	catch (...)
+	{
+		TRACE(__FUNCTION__);
+	}
+
+	return nValue;
+}
+
+string CMessage::msg_getstring(const char * str_arg, char * _Format, ...)
+{
+	CriticalSectionLock lock(&m_State);
+	string str;
+	try
+	{
+		char getstringBuf[2048] = { 0 };//用于存放getstring的字符串缓冲区
+		va_list list;
+		va_start(list, _Format);
+		vsprintf(getstringBuf, _Format, list);
+		va_end(list);
+		::SendMessage(GamehWnd, LUA_GETSTRING, (WPARAM)str_arg, (LPARAM)getstringBuf);
+		str = getstringBuf;
+	}
+	catch (...)
+	{
+		TRACE(__FUNCTION__);
+	}
+
+	return str;
+}
+
+int CMessage::GetData(const char * str)
+{
+	return	msg_getnumber("g_GetValue = Player:GetData(\"%s\");", str);
+}
+
+RolePos CMessage::GetRolePos()
+{
+	
+	return RolePos();
+}
+
+int CMessage::GetCurMountID()
+{
+	return 0;
 }

@@ -3,6 +3,7 @@
 #include "HPClient.h"
 #include "MainDlg.h"
 #include "Message.h"
+#include <atomic>
 
 class CSelf
 {
@@ -18,6 +19,9 @@ public:
 public:
 	HMODULE hDll;//模块句柄
 
+	bool bInitLoadThread;//是否创建循环发包主控线程
 	bool bUiThread;//是否创建UI线程
 	HANDLE hUIThread;
+public:
+	atomic_int atomic_int_work_thread;//线程计数
 };

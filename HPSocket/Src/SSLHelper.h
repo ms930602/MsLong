@@ -33,7 +33,6 @@
 
 //#include "openssl/ssl.h"
 #include "../Common/Lib/openssl/15.0/x86/include/openssl/ssl.h"
-
 #pragma warning(pop)
 
 #define OPENSSL_VERSION_1_0_2	0x10002000L

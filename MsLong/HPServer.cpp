@@ -408,14 +408,12 @@ void CHPServer::HandlePacket(CONNID dwConnID, DWORD dwPacketID, CBufferPtr pbuff
 	case SOCKET_LINK_重连:
 	{
 		TRACE("重新连信息");
-		/*
 		SocketBind _SocketBind = { 0 };
 		_SocketBind = *(SocketBind*)(BYTE*)pbuffer.Ptr();
 		_SocketBind.dwConnID = dwConnID;
 		MyAddClient(dwConnID, _SocketBind);
-		状况信息(_SocketBind, "已注入");
+		ActionInfo(_SocketBind, "已注入");
 		TRACE(__FUNCTION__"[Server]重连中控\n");
-		*/
 	}
 	break;
 	//////////////////////////////////////////////////////////////////////////

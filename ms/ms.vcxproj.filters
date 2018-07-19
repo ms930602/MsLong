@@ -63,6 +63,12 @@
     <ClCompile Include="..\HPSocket\Src\TcpPullClient.cpp">
       <Filter>HPSocket</Filter>
     </ClCompile>
+    <ClCompile Include="DlgTabA.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgTabB.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ms.h">
@@ -147,6 +153,12 @@
       <Filter>HPSocket</Filter>
     </ClInclude>
     <ClInclude Include="ClientFunction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgTabA.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgTabB.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

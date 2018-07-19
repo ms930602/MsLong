@@ -1,4 +1,7 @@
 #pragma once
+#include "afxcmn.h"
+#include "DlgTabA.h"
+#include "DlgTabB.h"
 
 #define WM_MY_MESSAGE (WM_USER+200)
 #define WM_MYSTYLEEX_MESSAGE (WM_USER+201)
@@ -24,7 +27,11 @@ protected:
 public:
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedBtn1();
 	afx_msg LRESULT OnMyStyleMessage(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnClose();
+	CTabCtrl m_Tab;
+	int m_CurSelTab;
+	CDlgTabA m_pageA;
+	CDlgTabB m_pageB; 
+	afx_msg void OnTcnSelchangeTabMain(NMHDR *pNMHDR, LRESULT *pResult);
 };

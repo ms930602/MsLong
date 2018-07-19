@@ -10,7 +10,7 @@ void CScriptSystem::Initial()
 	//注册全局函数
 	objGlobal.Register("ShowMessage", *m_pMsLua,
 		&CMsLua::LUA_ShowMessage);//调试输出字符串函数
-
+	
 	objGlobal.Register("Stop", *m_pMsLua,
 		&CMsLua::LUA_Stop);//停止lua脚本的命令函数
 

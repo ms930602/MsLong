@@ -18,6 +18,8 @@ public:
 	void HPInit();
 	void HPRelease();
 	void MySendPID();
+	void MyReconnection();   //检测通信断线的函数
+	void MySendReconnection();//发送重连中控
 private:
 	virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID);
 	virtual EnHandleResult OnSend(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength);
