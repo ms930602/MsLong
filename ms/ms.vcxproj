@@ -216,6 +216,7 @@
     <ClCompile Include="..\HPSocket\Src\SocketHelper.cpp" />
     <ClCompile Include="..\HPSocket\Src\TcpClient.cpp" />
     <ClCompile Include="..\HPSocket\Src\TcpPullClient.cpp" />
+    <ClCompile Include="Controls.cpp" />
     <ClCompile Include="DlgTabA.cpp" />
     <ClCompile Include="DlgTabB.cpp" />
     <ClCompile Include="HPClient.cpp" />
@@ -250,6 +251,7 @@
     <ClInclude Include="..\HPSocket\Src\TcpClient.h" />
     <ClInclude Include="..\HPSocket\Src\TcpPullClient.h" />
     <ClInclude Include="ClientFunction.h" />
+    <ClInclude Include="Controls.h" />
     <ClInclude Include="DlgTabA.h" />
     <ClInclude Include="DlgTabB.h" />
     <ClInclude Include="GameFunction.h" />

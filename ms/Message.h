@@ -27,8 +27,14 @@ public:
 		InitLuaFun();//初始化游戏lua库函数
 		lua_state = GetLuaState();//获取游戏lua状态机指针
 		
+		CHAR lpBuffer[MAX_PATH] = { 0 };
+		HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, lpBuffer);
+		CStringA strPAth(lpBuffer);
+		CStringA strPAth2;
+		strPAth2.Format("\\Client%x.lua", GetCurrentProcessId());
+		strPAth += strPAth2;
 		//我的文档的路径
-		LUAInitialize();
+		LUAInitialize(strPAth);
 	};
 	void Release() {//卸载子类化
 		un_subclass_game_wndproc();
@@ -79,14 +85,17 @@ private:
 	void un_subclass_game_wndproc();	//卸载子类化窗口过程
 	int InitLuaFun();//获取lua库函数
 	int GetLuaState();//获取游戏中lua状态指针
-	BOOL LUAInitialize();//创建系统资源文件syslua
+	BOOL LUAInitialize(const char * SzDriverPath);//创建系统资源文件syslua
 public:
 	void msg_dostring(const char* _Format, ...);//执行dostring
 	int msg_getnumber(char* _Format, ...);//获取数字
 	//1.0 str_arg ：要获取的lua字符串变量    2.0 _Format ：要执行的全部字符串命令
 	string msg_getstring(const char* str_arg, char* _Format, ...);//获取字符串
 public:
-	bool IsWindowShow(const char* str);//
+	bool IsWindowShow_MSG(const char* str);//
+	bool IsWindowShowEx(const char* str);//
+	bool SelectServer_MSG(const char* ServerName);//选择大区
+	bool LoginPassWord(const char* UserName, const char* UserKey, const char* other);//输入帐号密码
 	BOOL AllLootPacket();//拾取全部
 	void SelfEquip_AskLevelup();//提升等级
 	void CallInOutRide(int nValue);//召唤找回坐骑 --召唤(1)，收回(0)坐骑

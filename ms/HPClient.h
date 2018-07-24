@@ -34,4 +34,5 @@ private:
 	CTcpPullClient m_Client;
 public:
 	UINT SendRoleInfo();	//传递人物信息给主控的线程
+	UINT Login_Thread();    //登录线程函数
 };

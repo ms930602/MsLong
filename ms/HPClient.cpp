@@ -6,6 +6,7 @@
 #include "ms.h"
 #include "MonsterService.h"
 #include "RoleService.h"
+#include "Controls.h"
 
 #define DEFAULT_CONTENT	_T("text to be sent")
 #define DEFAULT_ADDRESS	_T("127.0.0.1")
@@ -207,7 +208,8 @@ void Initial()
 	pClient->HPInit();
 	pMsg->Init();
 	pSelf->CreatUI();
-/*
+
+	/*
 	while (pSelf->bInitLoadThread)
 	{
 		pClient->MyReconnection();
@@ -277,6 +279,54 @@ UINT CHPClient::SendRoleInfo()
 	_SocketGameRoleInfo.RoleStatus = 1;
 
 	MySendPackets(SOCKET_USERINFO, sizeof(_SocketGameRoleInfo), (char*)&_SocketGameRoleInfo);
+	return 0;
+}
+
+UINT CHPClient::Login_Thread()
+{
+	/*
+	strcpy_s(__SocketLoginInfo.GameServerName, "宠爱一生");
+	strcpy_s(__SocketLoginInfo.GameName, "ms930602");
+	strcpy_s(__SocketLoginInfo.GameNameHouZhui, "@changyou.com");
+	strcpy_s(__SocketLoginInfo.GamePWD, "mtopotqx0");
+	__SocketLoginInfo.IsErJiMiBao = false;
+	strcpy_s(__SocketLoginInfo.RoleName, "虞兮");
+
+	TRACE("进入自动登录功能");
+	
+	for (INT i = 0; i < 30; i++)
+	{
+		if (pMsg->IsWindowShow_MSG("LoginSelectServer"))//判断选择大区界面
+		{
+			Sleep(4000);
+			pMsg->SelectServer_MSG(__SocketLoginInfo.GameServerName);//选择大区
+			Sleep(1000);
+			break;
+		}
+		Sleep(2000);
+	}
+
+	Sleep(2000);
+	
+	TRACE("输入密码");
+	//输入账号，密码，确定进入游戏
+	pMsg->LoginPassWord(__SocketLoginInfo.GameName, __SocketLoginInfo.GamePWD, __SocketLoginInfo.GameNameHouZhui);//输入帐号，选择后缀
+	Sleep(1000);
+	pMsg->msg_dostring("setmetatable(_G, { __index = LoginLogOn_Env }); LogOn_CheckAccount();");
+
+	//防沉迷、密保
+	//排队，排队满判断
+	//账号密码错误
+	//登陆时过渡的窗口,正在连接XX服务器,正在进入,错误,无法连接
+	CCLoginState _CCLoginState;
+	CControlsCommon _CControlsCommon;
+	*/
+	/*
+	//等待进入选择角色或者创建角色
+	bool isSelectRole = pMsg->IsWindowShowEx("LoginSelectRole");//选择角色
+	bool isCreateRole = pMsg->IsWindowShowEx("LoginCreateRole");//创建角色
+	bool isFangChenMi_MiBao = _CControlsCommon.isVisiableControl("FangChenMi_Frame_1");//防沉迷FangChenMi_Frame_1
+	*/
 	return 0;
 }
 

@@ -342,15 +342,8 @@ int CMessage::GetLuaState()
 	return L;
 }
 
-BOOL CMessage::LUAInitialize()
+BOOL CMessage::LUAInitialize(const char * SzDriverPath)
 {
-	CHAR lpBuffer[MAX_PATH] = { 0 };
-	HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, lpBuffer);
-	CString strPAth(lpBuffer);
-	CString strPAth2;
-	strPAth2.Format(_T("\\Client%x.cfg"), GetCurrentProcessId());
-	strPAth += strPAth2;
-
 	HRSRC hResc = ::FindResource(pSelf->hDll, MAKEINTRESOURCE(IDR_RCDATA1), RT_RCDATA);
 	if (hResc == NULL)
 	{
@@ -373,7 +366,7 @@ BOOL CMessage::LUAInitialize()
 		return FALSE;
 	}
 
-	HANDLE hFile = CreateFile(strPAth, GENERIC_WRITE, FILE_SHARE_READ,
+	HANDLE hFile = CreateFileA(SzDriverPath, GENERIC_WRITE, FILE_SHARE_READ,
 		NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
@@ -395,8 +388,8 @@ BOOL CMessage::LUAInitialize()
 	}
 	::CloseHandle(hFile);
 	Sleep(1000);
-	::SendMessage(GamehWnd, LUA_REGISTEREX, 0, (LPARAM)strPAth.GetString());//×¢²álua£¬¼ÓÔØlua_lib
-	DeleteFile(strPAth);
+	::SendMessage(GamehWnd, LUA_REGISTEREX, 0, (LPARAM)SzDriverPath);//×¢²álua£¬¼ÓÔØlua_lib
+	DeleteFileA(SzDriverPath);
 	return TRUE;
 }
 
@@ -461,6 +454,77 @@ string CMessage::msg_getstring(const char * str_arg, char * _Format, ...)
 	}
 
 	return str;
+}
+
+bool CMessage::IsWindowShow_MSG(const char * str)
+{
+	bool bOk = false;
+	for (size_t i = 0; i < 6; i++)
+	{
+		if (msg_getnumber("g_GetValue = IsWindowShow_MSG(\"%s\")", str))
+		{
+			bOk = true;
+			break;
+		}
+		Sleep(100);
+	}
+
+	return bOk;
+}
+
+bool CMessage::IsWindowShowEx(const char * str)
+{
+	TRACE("g_GetValue = IsWindowShow_MSG(\"%s\")", str);
+	if (msg_getnumber("g_GetValue = IsWindowShow_MSG(\"%s\")", str))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool CMessage::SelectServer_MSG(const char * ServerName)
+{
+	msg_dostring("SelectServer_MSG(\"%s\")", ServerName);
+
+	return true;
+}
+
+bool CMessage::LoginPassWord(const char * UserName, const char * UserKey, const char * other)
+{
+	char* TailName[] = {
+		"@changyou.com",
+		"@game.sohu.com",
+		"@Sohu.com",
+		"@chinaren.com",
+		"@sogou.com",
+		"@17173.com",
+		"ÊÖ»úºÅÂëµÇÂ¼",
+		"ÊäÈëÆäËûÕËºÅºó×º"
+	};
+	int nTail = -1;
+	for (size_t i = 0; i < 8; i++)
+	{
+		if ((string)TailName[i] == (string)other)
+		{
+			nTail = i;
+			break;
+		}
+	}
+
+	if (nTail != -1 && !((string)UserName).empty() && ((string)UserKey).length() != 0)
+	{
+		msg_dostring("LoginPassWord(\"%s\",%d)", UserName, nTail);
+		for (size_t i = NULL; i < strlen(UserKey); i++)
+		{
+			::SendMessage(GamehWnd, WM_IME_CHAR, (WPARAM)UserKey[i], 1);
+			Sleep(10);
+		}
+		return true;
+	}
+
+
+	return false;
 }
 
 int CMessage::GetData(const char * str)

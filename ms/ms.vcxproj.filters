@@ -69,6 +69,9 @@
     <ClCompile Include="DlgTabB.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Controls.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ms.h">
@@ -162,6 +165,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="GameFunction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

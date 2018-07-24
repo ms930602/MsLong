@@ -6,8 +6,9 @@
 #include "DlgTabA.h"
 #include "afxdialogex.h"
 #include "Message.h"
-
+#include "HPClient.h"
 extern CMessage* pMsg;
+extern CHPClient* pClient;
 // CDlgTabA 对话框
 
 IMPLEMENT_DYNAMIC(CDlgTabA, CDialogEx)
@@ -45,5 +46,17 @@ BOOL CDlgTabA::OnInitDialog()
 
 void CDlgTabA::OnBnClickedTabABtn1()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	CString str;
+	GetDlgItem(IDC_EDIT_A_1)->GetWindowTextW(str);
+	str.ReleaseBuffer();
+	USES_CONVERSION;
+	char * pFileName = T2A(str);
+
+	if (pMsg->IsWindowShowEx(pFileName)) {
+		TRACE("打开了");
+	}
+	else {
+		TRACE("关闭了");
+	}
+	//pClient->Login_Thread();
 }
