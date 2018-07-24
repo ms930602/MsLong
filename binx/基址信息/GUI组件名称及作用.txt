@@ -1,0 +1,30 @@
+-------------------登录界面相关
+
+LoginSelectServer   ->登录界面选择大区界面
+LoginLogOn          ->输入账号界面
+LoginSelectRole     ->选择角色界面
+
+LoginSelectServerQue->密码错误提示框 错误提示框
+TextValidate        ->文本验证框
+FangChenMi          ->输入密码后弹出的防沉迷窗口
+bg_info             ->选择角色登录后出现的加载页面
+
+
+Shop            ->购买商品窗口
+
+AcceptBox       ->过传送阵出现的提示窗口
+MessageBox_Self ->过驿站出现的提示窗口
+SceneTrans      ->过图显示组件
+Huoyuehaoli     ->领取每日每周活跃好礼
+SweepAll        ->扫荡界面
+QuestLog        ->任务界面
+Quest   	    ->NPC任务界面
+BigBank         ->仓库大界面
+Bank            ->仓库背包小界面
+EquipRepair     ->装备修理
+ShenQiRepair    ->修理神奇界面
+EquipEnchange   ->增加维修次数
+TheFireStove    ->领取离火界面
+TheFireStove    ->兑换精炼石的对话框
+XingYun         ->幸运快活三界面
+SafeCenter_SafeCheck  ->天龙八部安全中心 畅游验证码或app验证

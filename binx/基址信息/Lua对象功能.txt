@@ -1,0 +1,94 @@
+---------获取---------------------
+#获取当前地图名称
+GetCurrentSceneName();
+#最大生命 MP
+Player:GetData("MAXHP")
+#当前生命 MP
+Player:GetData("HP")
+#当前怒气
+Player:GetData( "RAGE" );
+
+#金币
+Player:GetData("MONEY")
+#交子
+Player:GetData("MONEY_JZ")
+#等级
+Player:GetData( "LEVEL" )
+#元宝
+Player:GetData("YUANBAO")
+#绑定元宝
+Player:GetData("BIND_YUANBAO")
+#返券
+Player:GetData("GIFTTOKEN")
+#当天活跃值
+Player:GetData("TODAYACTIVEPOINT")
+#帮贡
+Player:GetData("GUILDPOINT")
+#红利
+Player:GetData("LIJIN")
+#功力值
+Player:GetData("POWER")
+#当前经验
+local nCurExp = Player:GetData("EXP");
+#需要的经验
+local nNeedExp = Player:GetData("NEEDEXP");
+
+-----pet对象-----
+#获取自己宠物的数量
+Pet:GetPet_Count()
+-----pet对象-----
+
+#通过技能ID获取技能名字
+Player:GetSkillInfo(commonid,"name");
+strName = Player:GetSkillInfo(commonid,"explain"); --说明
+strName2 = Player:GetSkillInfo(commonid,"skilldata");
+Player:GetSkillInfo(commonid,"passivity") --被动状态
+
+#门派 9为没有门派
+Player:GetData("MEMPAI")
+#获取当前坐标
+g_posX, g_posY = Player:GetPos();
+
+#冰攻
+local iIceAttack  		= Player:GetData( "ATTACKCOLD" );
+#火攻击
+local iFireAttack 		= Player:GetData( "ATTACKFIRE" );
+#玄攻
+local iThunderAttack	= Player:GetData( "ATTACKLIGHT" );
+#毒攻
+local iPoisonAttack		= Player:GetData( "ATTACKPOISON" );
+#冰抗
+local iIceDefine  		= Player:GetData( "DEFENCECOLD" );
+#火炕
+local iFireDefine 		= Player:GetData( "DEFENCEFIRE" );
+#玄抗
+local iThunderDefine	= Player:GetData( "DEFENCELIGHT" );
+#毒抗
+local iPoisonDefine		= Player:GetData( "DEFENCEPOISON" );
+-----------判断------------------
+Player:IsTeamLeader()
+#是否在队伍里面 1为是
+Player:IsInTeam()
+#是否在团队里面 1为是
+Player:IsInRaid()
+#是否是团队队长 1为是
+Player:IsRaidLeader()
+#是否是团队助理 1为是
+Player:IsRaidAssitant()
+#是否输入2级密码
+Player:IsLocked()
+
+
+-----------功能------------------
+#退出队伍
+Player:LeaveTeam();
+#退出团队
+Player:LeaveRiad()
+#自己创建队伍
+Player:CreateTeamSelf();
+#队伍跟随
+Target:Follow();
+#取消跟随
+Player:StopFollow();
+#修改任务攻击模式   0 和平 1->个人 2->善恶 3->组队混战 4->帮派同盟混战 5->团队混战 6
+Player:ChangePVPMode( 0 );

@@ -1,0 +1,37 @@
+6299FF4C
+
+035B8060    8B81 4C010000   mov eax,dword ptr ds:[ecx+0x14C]
+
+035B8050    8B4E 08         mov ecx,dword ptr ds:[esi+0x8]
+
+035B803B    8B30            mov esi,dword ptr ds:[eax]
+
+035B8038    8B43 08         mov eax,dword ptr ds:[ebx+0x8]
+
+035B8011    8BD9            mov ebx,ecx
+
+035B8543    8B0D CC3E5D03   mov ecx,dword ptr ds:[0x35D3ECC]
+
+[[[[0x3583ECC]+0x8]]+0x8]+0x14C
+
+
+03568060    8B81 4C010000   mov eax,dword ptr ds:[ecx+0x14C]
+
+03568050    8B4E 08         mov ecx,dword ptr ds:[esi+0x8]
+
+0356803B    8B30            mov esi,dword ptr ds:[eax]
+
+/*********
+03568038    8B43 08         mov eax,dword ptr ds:[ebx+0x8]
+0356803B    8B30            mov esi,dword ptr ds:[eax]
+0356803D    3BF0            cmp esi,eax
+**********/
+
+03568038    8B43 08         mov eax,dword ptr ds:[ebx+0x8]
+
+03568011    8BD9            mov ebx,ecx
+
+03568543    8B0D CC3E5803   mov ecx,dword ptr ds:[0x3583ECC]
+
+C7 86 4C 01 00 00 01 00 00 00 33 C0 5E C2 04 00
+

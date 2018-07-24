@@ -1,0 +1,23 @@
+00767AD8  |.  8951 2C       mov dword ptr ds:[ecx+0x2C],edx
+
+0076705C  |.  8BCE          mov ecx,esi
+
+00766FE5  |.  8BF1          mov esi,ecx
+
+00767924  |.  8BCE          mov ecx,esi
+
+00767737  |.  8BF1          mov esi,ecx
+
+007C3040  |> \8B8E AC000000 mov ecx,dword ptr ds:[esi+0xAC]
+
+007C2FD4  |.  8BF1          mov esi,ecx
+
+0052E143  |.  8B0D BC6BB500 mov ecx,dword ptr ds:[0xB56BBC]
+
+[[0xB56BBC]+0xAC]+0x2C
+
++2C x坐标
++34 y坐标
+
+特征码
+6A 00 6A 01 50 8B 06 50

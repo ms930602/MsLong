@@ -1,0 +1,55 @@
+004C06EE  |.  8991 DC270000 mov dword ptr ds:[ecx+0x27DC],edx
+
+004C06E8  |> \8B4B 04       mov ecx,dword ptr ds:[ebx+0x4]
+
+004C056C  |.  8BD9          mov ebx,ecx
+
+00735367  |.  8BCF          mov ecx,edi
+
+0073530D  |.  8BBB D0010000 mov edi,dword ptr ds:[ebx+0x1D0]
+
+007352FC  |.  8BD8          mov ebx,eax
+
+0076BFBA  |> \8B40 10       mov eax,dword ptr ds:[eax+0x10]
+
+0077AC99  |.  8B10          mov edx,dword ptr ds:[eax]                              ;  0019F65C
+
+0077AC96  |.  8D45 0C       lea eax,dword ptr ss:[ebp+0xC]
+
+0077AC8A  |.  8955 0C       mov dword ptr ss:[ebp+0xC],edx                          ;  1
+
+0077AC7A  |> \8BD0          |mov edx,eax
+
+0077AC75  |.  8B40 08       |mov eax,dword ptr ds:[eax+0x8]
+
+0077AC57  |.  8B42 04       mov eax,dword ptr ds:[edx+0x4]
+
+0077AC54  |.  8B51 04       mov edx,dword ptr ds:[ecx+0x4]
+
+0076BF9F  |.  8D4E 4C       lea ecx,dword ptr ds:[esi+0x4C]
+
+0072B93F  |.  8B0D 8065B500 mov ecx,dword ptr ds:[0xB56580]
+
+二叉树入口
+8B F1 8D 45 08 50 8D 4D FC 51 8D 4E 4C 第一次查询 
+0076BF9F  |.  8D4E 4C       lea ecx,dword ptr ds:[esi+0x4C]
+0076BFA2  |.  E8 A9EC0000   call Game.0077AC50                -->二叉树入口
+0076BFA7  |.  8B4E 50       mov ecx,dword ptr ds:[esi+0x50]
+
+二叉树基址
+8A 87 2F 01 00 00 8A 8F 2E 01 00 00 3A C1
+0072B978  |.  8A87 2F010000 mov al,byte ptr ds:[edi+0x12F]
+0072B97E  |.  8A8F 2E010000 mov cl,byte ptr ds:[edi+0x12E]
+0072B984  |.  3AC1          cmp al,cl
+
+0072B93C  |.  8B75 08             mov esi,dword ptr ss:[ebp+0x8]
+0072B93F  |.  8B0D 8065B500       mov ecx,dword ptr ds:[0xB56580]                         ;  二叉树基址
+0072B945  |.  8B46 10             mov eax,dword ptr ds:[esi+0x10]
+
+
+
+
+dd [[[[[[[[0xB56580]+4c+0x4]+0x4]+0x8]]+10]+0x1D0]+0x4]+0x27DC   //二叉树
+
++3C 名称
++27DC 当前血量

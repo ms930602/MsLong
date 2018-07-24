@@ -307,7 +307,7 @@ UINT CHPClient::Login_Thread()
 	}
 
 	Sleep(2000);
-	
+	 
 	TRACE("输入密码");
 	//输入账号，密码，确定进入游戏
 	pMsg->LoginPassWord(__SocketLoginInfo.GameName, __SocketLoginInfo.GamePWD, __SocketLoginInfo.GameNameHouZhui);//输入帐号，选择后缀

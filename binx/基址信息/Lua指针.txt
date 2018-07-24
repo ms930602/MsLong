@@ -1,0 +1,13 @@
+007FCA00    8B35 1C8AB500   mov esi,dword ptr ds:[0xB58A1C]          ; LUA指针基址
+
+007FCA14    8BCE            mov ecx,esi
+
+007CEF63    8BF1            mov esi,ecx
+
+007CEF8C    8B16            mov edx,dword ptr ds:[esi]
+
+007CEF93    FF52 3C         call dword ptr ds:[edx+0x3C]
+
+007CEF96    8B10            mov edx,dword ptr ds:[eax]
+
+8D 55 98 B3 02 52 88 5D FC
