@@ -7,10 +7,12 @@
 #include "MsLongDlg.h"
 #include "afxdialogex.h"
 #include "HPServer.h"
+#include "MsFileUtil.h"
 
 HWND g_MyHwnd = nullptr;
 
 CHPServer* MyServer;
+CFileUtil* fileUtil;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -102,6 +104,8 @@ BOOL CMsLongDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	fileUtil = new CFileUtil();
+
 	m_tab.InsertItem(0, _T("控制台"));
 	m_tab.InsertItem(1, _T("基础信息"));
 	m_pageA.Create(IDD_DIALOG1, &m_tab);
@@ -262,6 +266,7 @@ void CMsLongDlg::OnClose()
 	else {
 		::Shell_NotifyIcon(NIM_DELETE, &m_notify); //关闭时删除系统托盘图标  
 		delete MyServer;
+		delete fileUtil;
 		CDialog::OnClose();
 	}
 }

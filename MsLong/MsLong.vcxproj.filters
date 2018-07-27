@@ -108,6 +108,9 @@
     <ClInclude Include="..\HPSocket\Src\TcpServer.h">
       <Filter>HPSocket</Filter>
     </ClInclude>
+    <ClInclude Include="MsFileUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MsLong.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="..\HPSocket\Src\TcpServer.cpp">
       <Filter>HPSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="MsFileUtil.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
